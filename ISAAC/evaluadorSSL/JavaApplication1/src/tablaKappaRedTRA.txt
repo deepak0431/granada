@@ -1,0 +1,4 @@
+Datasets		stratPG-C		
+magic		0,0000	
+nursery		0,0000	
+penbased		0,0000	

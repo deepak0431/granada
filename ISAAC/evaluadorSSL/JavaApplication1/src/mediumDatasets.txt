@@ -1,0 +1,23 @@
+TSFSFW-C
+
+----
+
+abalone 0
+banana 0
+chess 0
+coil2000 0
+magic 0
+marketing 0
+nursery 0
+page-blocks 0
+penbased 0
+phoneme 0
+ring 0
+satimage 0
+segment 0
+spambase 0
+splice 0
+texture 0
+thyroid 0
+titanic 0
+twonorm 0

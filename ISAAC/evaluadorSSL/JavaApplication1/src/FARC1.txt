@@ -1,0 +1,10 @@
+Ignore-MV.FARC-HD
+Ignore-MV.PBIL-TSS.FARC-HD
+Ignore-MV.IS-CPruner.FARC-HD
+
+----
+
+bupa 0
+cleveland 0
+ecoli 0
+

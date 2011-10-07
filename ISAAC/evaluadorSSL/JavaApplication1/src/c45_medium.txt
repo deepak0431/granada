@@ -1,0 +1,24 @@
+Ignore-MV.CHC-TSS.C45-C
+Ignore-MV.CHClassic-TSS.C45-C
+Ignore-MV.IS-SSMA.C45-C
+Ignore-MV.IS-AllKNN.C45-C
+Ignore-MV.IS-CNN.C45-C
+Ignore-MV.IS-CPruner.C45-C
+Ignore-MV.IS-DROP3.C45-C
+Ignore-MV.IS-FCNN.C45-C
+Ignore-MV.IS-HMNEI.C45-C
+Ignore-MV.IS-IB3.C45-C
+Ignore-MV.IS-ICF.C45-C
+Ignore-MV.IS-MCNN.C45-C
+Ignore-MV.IS-MSS.C45-C
+
+----
+
+magic-10fold 0
+page-blocks-10fold 0
+penbased-10fold 0
+ring-10fold 0
+thyroid-10fold 0
+satimage-10fold 0
+nursery-10fold 0
+coil2000-10fold 0

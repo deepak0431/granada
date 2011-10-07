@@ -1,0 +1,6 @@
+stratPG-C
+----
+
+magic 0
+nursery 0
+penbased 0

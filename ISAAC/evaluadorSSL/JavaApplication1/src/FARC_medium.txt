@@ -1,0 +1,24 @@
+Ignore-MV.CHC-TSS.FARC-HD
+Ignore-MV.CHClassic-TSS.FARC-HD
+Ignore-MV.IS-SSMA.FARC-HD
+Ignore-MV.IS-AllKNN.FARC-HD
+Ignore-MV.IS-CNN.FARC-HD
+Ignore-MV.IS-CPruner.FARC-HD
+Ignore-MV.IS-DROP3.FARC-HD
+Ignore-MV.IS-FCNN.FARC-HD
+Ignore-MV.IS-HMNEI.FARC-HD
+Ignore-MV.IS-IB3.FARC-HD
+Ignore-MV.IS-ICF.FARC-HD
+Ignore-MV.IS-MCNN.FARC-HD
+Ignore-MV.IS-MSS.FARC-HD
+
+----
+
+magic-10fold 0
+page-blocks-10fold 0
+penbased-10fold 0
+ring-10fold 0
+thyroid-10fold 0
+satimage-10fold 0
+nursery-10fold 0
+coil2000-10fold 0

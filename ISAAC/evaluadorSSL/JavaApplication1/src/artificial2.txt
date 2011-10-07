@@ -1,0 +1,8 @@
+IPADECSFW-C
+IPLDECS-C
+SSMASFLSDE-C
+SSMACoDEFW-C
+----
+
+glass-20an-nc 0
+wine-20an-nc 0

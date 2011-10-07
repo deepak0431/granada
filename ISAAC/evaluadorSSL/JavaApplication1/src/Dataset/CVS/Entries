@@ -1,0 +1,21 @@
+/Attribute.java/1.4/Fri Sep 19 10:45:28 2008//
+/Attributes.java/1.4/Wed Jan  9 13:19:39 2008//
+/DataParser.java/1.1/Wed Oct 18 18:47:35 2006//
+/DataParserConstants.java/1.1/Wed Oct 18 18:47:35 2006//
+/DataParserTokenManager.java/1.1/Wed Oct 18 18:47:35 2006//
+/DatasetException.java/1.1/Wed Oct 18 18:47:35 2006//
+/ErrorInfo.java/1.1/Wed Oct 18 18:47:35 2006//
+/FormatErrorKeeper.java/1.1/Wed Oct 18 18:47:35 2006//
+/HeaderFormatException.java/1.1/Wed Oct 18 18:47:35 2006//
+/Instance.java/1.5/Wed Jan  9 13:22:11 2008//
+/InstanceAttributes.java/1.1/Mon Dec 18 11:04:15 2006//
+/InstanceParser.java/1.2/Fri Nov  9 17:28:31 2007//
+/InstanceSet.java/1.9/Sun Feb  3 20:39:27 2008//
+/Main.java/1.1/Fri Nov  9 18:19:18 2007//
+/Makefile/1.1/Mon Dec 18 11:04:15 2006//
+/ParseException.java/1.1/Wed Oct 18 18:47:35 2006//
+/SimpleCharStream.java/1.1/Wed Oct 18 18:47:35 2006//
+/Token.java/1.1/Wed Oct 18 18:47:35 2006//
+/TokenMgrError.java/1.1/Wed Oct 18 18:47:35 2006//
+/build.xml/1.1/Wed Oct 18 18:47:35 2006//
+D/Parser////

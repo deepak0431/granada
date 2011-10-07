@@ -1,0 +1,4 @@
+Datasets		stratPG-C	
+magic		961,9198	
+nursery		1418,3866	
+penbased		1728,9589	

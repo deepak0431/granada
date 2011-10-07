@@ -1,0 +1,4 @@
+Datasets		stratPG-C		
+magic		0,8166	0,0040	
+nursery		0,8089	0,0091	
+penbased		0,9840	0,0036	
