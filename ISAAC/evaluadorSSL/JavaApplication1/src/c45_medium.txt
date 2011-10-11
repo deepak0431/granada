@@ -1,3 +1,4 @@
+Ignore-MV.C45-C
 Ignore-MV.CHC-TSS.C45-C
 Ignore-MV.CHClassic-TSS.C45-C
 Ignore-MV.IS-SSMA.C45-C
@@ -10,7 +11,13 @@ Ignore-MV.IS-HMNEI.C45-C
 Ignore-MV.IS-IB3.C45-C
 Ignore-MV.IS-ICF.C45-C
 Ignore-MV.IS-MCNN.C45-C
+Ignore-MV.IS-MENN.C45-C
+Ignore-MV.IS-ModelCS.C45-C
 Ignore-MV.IS-MSS.C45-C
+Ignore-MV.IS-POP.C45-C
+Ignore-MV.IS-Reconsistent.C45-C
+Ignore-MV.IS-RMHC.C45-C
+Ignore-MV.IS-RNG.C45-C
 
 ----
 

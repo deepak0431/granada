@@ -3,6 +3,8 @@ import java.util.*;
 
 
 //imported to use the excell library
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import writer.*;
 import java.io.IOException;
 import jxl.write.WriteException;
@@ -84,6 +86,7 @@ public class TestFARC_small {
     static ElementIndex elem_AvgISRed[];
     static ElementIndex elem_RedSizeXtst[];
     static ElementIndex elem_RedXtst[];
+    static ElementIndex elem_Time[];
     
     // Element Ranks variables
     static ElementIndex elem_ranks_tst[];
@@ -107,30 +110,46 @@ public class TestFARC_small {
                 calculate_values();
                 
                 // calcultating average and averageRanks
+                System.out.println("calcolo AVG");
                 calculteAvg();
+                System.out.println("calcolo AVGRanks" );
                 calculteAvgRanks();
                 
                 //WRITING THE TABLES
+                System.out.println("writeTableAvg" );
                 writeTableAvg();
+                System.out.println("writeAvgRank" );
                 writeTableAvg_rank();
+                System.out.println("write_table_excel" );
                 write_table_excel();
+                System.out.println("writeTable_Bests" );
                 writeTable_Bests();
+                System.out.println("writeTable_BestsS" );
+                writeTable_BestsS();
                 
                 //WRITING THE CSV
+                System.out.println("writeCSV" );
                 writeCSVs();
                 
                 //TEST OUTPUT
                 //print_redSize();
         }
     private static void calculate_values(){
-            //calcolo_tempo();
-            calcolo_nodi_ant();
-            calcolo_accurancy();    
+            calcolo_tempo();
+            System.out.println("calcolo acc_tst");
+            calcolo_accurancy();
+            System.out.println("calcolo acc_tra");
             calcolo_accurancy_tra();
     
+            System.out.println("calcolo red");
             calcolo_Red();
+            
+            System.out.println("calcolo nodi_ant");
             calcolo_nodi_ant();
+            
+            System.out.println("calcolo friedman");
             calculate_friedman();
+            System.out.println("calcolo RedAVG");
             calculate_redAVG();
         }
     
@@ -152,7 +171,7 @@ public class TestFARC_small {
             saltos = new Vector <Integer>();
 
             /*Lectura del fichero de configuraci�n*/
-            cadena = Fichero.leeFichero(args[0]);
+            cadena = Fichero.myleeFichero(args[0]);
             lineas = new StringTokenizer (cadena,"\n\r");
             while (lineas.hasMoreTokens()) {
                     linea = lineas.nextToken();
@@ -197,9 +216,9 @@ public class TestFARC_small {
             redV = new double[10];
             kappaV = new double[10];
 
-            //tiempos = Fichero.leeFichero("tiempos.txt");
+            //tiempos = Fichero.myleeFichero("tiempos.txt");
 
-            System.out.println("Numbero de algoritmos "+ algoritmos.size());
+            System.out.println("Numero de algoritmos "+ algoritmos.size());
             /*C�lculo del accuracy, kappa y reducci�n en KNN (TRAIN)*/
             configAct = 0;
             
@@ -270,8 +289,10 @@ public class TestFARC_small {
                 int index_time=0;
                 
                 if (st.countTokens()==3){
-                    cadena = Fichero.leeFichero("SMALL\\outFARC\\"
-                                    +alAct+"\\sge_output.dat");
+                
+                cadena = Fichero.myleeFichero("SMALL\\outFARC\\"
+                                +alAct+"\\sge_output.dat");
+                
 
                     //a qsto punto dovrei avere il nome dell'algoritmo
 
@@ -320,6 +341,7 @@ public class TestFARC_small {
                         }
                     }
                 }
+                System.out.println("END Calculating time algorithm: " + alAct+"\n");
             }   
         }
                     
@@ -330,11 +352,12 @@ public class TestFARC_small {
             /* Istruzioni eseguite per ognuno degli algoritmi */
             for (int i=0; i<algoritmos.size(); i++) {
                     alAct = (String)algoritmos.elementAt(i);
-                    //System.out.println("Processing algorithm: " + alAct);
-          
+                    //System.out.println("Acc_tst algorithm: " + alAct);
+                    
                     /* Per ognuno dei datasets presenti (indipendentemente dal numero di elementi del dataset)*/
                     for (int j=0; j<datasets.size(); j++) {
                             datAct = (String)datasets.elementAt(j);
+                            //System.out.println("Acc_tst dataset: " + datAct);
                             salAct = ((Integer)saltos.elementAt(j)).intValue();
                             acc = red = kappa = 0.0;
                             aciertos = 0;
@@ -343,13 +366,14 @@ public class TestFARC_small {
                                     /*Accuracy Computation*/
 
 
-                                    cadena = Fichero.leeFichero("SMALL\\resultsFARC\\"
+                                    cadena = Fichero.myleeFichero("SMALL\\resultsFARC\\"
                                             +alAct+"."+datasets.get(j)+"\\result"+Integer.toString(k)+"s0.tst");
 
                                     if(cadena.equals("-1")){
-                                            cadena = Fichero.leeFichero("SMALL\\resultsFARC\\"+alAct+"."+datasets.get(j)+"\\result"+Integer.toString(k+10)+"s0.tst");
+                                            cadena = Fichero.myleeFichero("SMALL\\resultsFARC\\"+alAct+"."+datasets.get(j)+"\\result"+Integer.toString(k+10)+"s0.tst");
                                     }
-
+                                    
+                                    //System.out.println("Acc_tst file: " + k);
 
                                     //System.out.println(datasets.get(j));
                                     //System.out.println(cadena);
@@ -412,12 +436,12 @@ public class TestFARC_small {
                                     String nomeCompleto=directory+nomeFile+"."+datasets.get(j)
                                             +"\\"+nomeFile+"."+datasets.get(j)+"-10-"+k+"tra.dat";
  
-                                    cadena = Fichero.leeFichero(nomeCompleto);
+                                    cadena = Fichero.myleeFichero(nomeCompleto);
                                     
                                     if(cadena.equals("-1")){
                                         nomeCompleto=directory+nomeFile+"."+datasets.get(j)
                                                 +"\\"+nomeFile+"s0."+datasets.get(j)+"-10-"+k+"tra.dat";
-                                        cadena = Fichero.leeFichero(nomeCompleto);
+                                        cadena = Fichero.myleeFichero(nomeCompleto);
                                     }
                                     
                                     //System.out.println(nomeCompleto);
@@ -459,11 +483,11 @@ public class TestFARC_small {
                                     /*Accuracy Computation*/
 
 
-                                    cadena = Fichero.leeFichero("SMALL\\resultsFARC\\"
+                                    cadena = Fichero.myleeFichero("SMALL\\resultsFARC\\"
                                             +alAct+"."+datasets.get(j)+"\\result"+Integer.toString(k)+"s0.tra");
 
                                     if(cadena.equals("-1")){
-                                            cadena = Fichero.leeFichero("SMALL\\resultsFARC\\"+alAct+"."+datasets.get(j)+"\\result"+Integer.toString(k+10)+"s0.tra");
+                                            cadena = Fichero.myleeFichero("SMALL\\resultsFARC\\"+alAct+"."+datasets.get(j)+"\\result"+Integer.toString(k+10)+"s0.tra");
                                     }
 
 
@@ -522,11 +546,11 @@ public class TestFARC_small {
 					/*Accuracy Computation*/
 
 					
-					cadena = Fichero.leeFichero("SMALL\\resultsFARC\\"
+					cadena = Fichero.myleeFichero("SMALL\\resultsFARC\\"
                                                 +alAct+"."+datasets.get(j)+"\\result"+Integer.toString(k)+"s0e1.txt");
 					
                                         if(cadena.equals("-1")){
-						cadena = Fichero.leeFichero("SMALL\\resultsFARC\\"
+						cadena = Fichero.myleeFichero("SMALL\\resultsFARC\\"
                                                 +alAct+"."+datasets.get(j)+"\\result"+Integer.toString(k+10)+"s0e1.txt");
 					}
 					
@@ -680,6 +704,36 @@ public class TestFARC_small {
                    b=new BigDecimal(redSize).setScale(precision,BigDecimal.ROUND_HALF_UP);
                    tabla.addNumber(j*4+4,1+i, b.doubleValue()); 
                    tabla.addString12pt(j*4+4, 0, "Red");
+               }
+            }
+            tabla.write();
+        }
+        
+        private static void writeTable_BestsS()throws IOException, WriteException{
+           MyExcelWriter tabla = new MyExcelWriter();
+           tabla.setOutputFile("SMALL\\Tablas\\FARC\\ExcelFARC_smallBestsS.xls");
+           tabla.create("tablaFARC");
+        
+           for (int i=0; i<datasets.size(); i++){
+               //writing the names of the datasets
+               tabla.addString12pt(0, 1+i, datasets.elementAt(i));
+               /* We are writing the values of the algorithms that perform better 
+                * equal to the FARC Algorithm (without the Instance selection)
+                */
+               ElementIndex elem_dataset_rank[]=ArrayIndex.createArray(ranks_matr[i]);
+               Arrays.sort(elem_dataset_rank);
+        
+               /* Still there's an algorithm with a rank equal or bigger then the 
+                * FARC's algorithm continues the loop.
+                */
+               for(int j=0;elem_dataset_rank[j].getValue()<=ranks_matr[i][0];j++){
+                   BigDecimal b; 
+                   int index=elem_dataset_rank[j].getIndex();
+                   double redSize= 1 - (numeroNodi[i][index]/numeroNodi[i][0]);
+                   if (redSize>0)
+                       tabla.addCaption(j*1+6,1+i, sel_alg.elementAt(index));
+                   else
+                       tabla.addString(j*1+6,1+i, sel_alg.elementAt(index));
                }
             }
             tabla.write();
@@ -881,6 +935,7 @@ public class TestFARC_small {
             
             double avg_RedSizeXtst[]= new double[algoritmos.size()];
             double avg_RedXtst[]    = new double[algoritmos.size()];
+            double avg_Time[]       = new double[algoritmos.size()];
             
             for (int j=0; j<algoritmos.size(); j++) {
                 for (int i=0; i<datasets.size(); i++) {
@@ -893,6 +948,7 @@ public class TestFARC_small {
                     
                     avg_RedSizeXtst[j] += RedSizeXtst[i][j];
                     avg_RedXtst[j]     += RedXtst[i][j];
+                    avg_Time[j]        += time[i][j];
                 }
                 avg_accuracyTra[j] /= datasets.size();
                 avg_accuracyTst[j] /= datasets.size();
@@ -908,6 +964,8 @@ public class TestFARC_small {
                 
                 avg_RedSizeXtst[j] /= datasets.size();
                 avg_RedXtst[j]     /= datasets.size();
+                
+                avg_Time[j]        /= datasets.size();
                 // product redSize*acc_test
                 //avg_RedSizeXtst[j]  = avg_RedSize[j] * avg_accuracyTst[j];
             }
@@ -922,6 +980,8 @@ public class TestFARC_small {
             elem_RedSizeXtst    =ArrayIndex.createArray(avg_RedSizeXtst);
             elem_RedXtst        =ArrayIndex.createArray(avg_RedXtst);
             
+            elem_Time           =ArrayIndex.createArray(avg_Time);
+            
             // Sorting the arrays
             Arrays.sort(elem_AvgTra, Collections.reverseOrder());
             Arrays.sort(elem_AvgTst, Collections.reverseOrder());
@@ -932,7 +992,9 @@ public class TestFARC_small {
             
             Arrays.sort(elem_RedSizeXtst, Collections.reverseOrder());
             Arrays.sort(elem_RedXtst, Collections.reverseOrder());
-        
+            
+            Arrays.sort(elem_Time);
+            
         }
         
         private static void calculate_redAVG(){
@@ -962,6 +1024,7 @@ public class TestFARC_small {
             tabla.addStringBig(10, 0, "RedSize");
             tabla.addStringBig(12, 0, "ISRed*a_tst");
             tabla.addStringBig(14, 0, "RedSz*a_tst");
+            tabla.addStringBig(16, 0, "Time");
             
             for(int j=0;j<sel_alg.size();j++){
                 BigDecimal b; int precisionBig=3;int precision=2;
@@ -1012,6 +1075,12 @@ public class TestFARC_small {
                 tabla.addStringBordL(14,1+j, sel_alg.elementAt(elem_RedSizeXtst[j].getIndex()));
                 //tabla.addNumber(15,1+j, elem_RedSizeXtst[j].getValue());
                 tabla.addNumber(15,1+j, b.doubleValue());
+                
+                // Time
+                b=new BigDecimal(elem_Time[j].getValue()).setScale(precision,BigDecimal.ROUND_HALF_UP);
+                tabla.addStringBordL(16,1+j, sel_alg.elementAt(elem_Time[j].getIndex()));
+                //tabla.addNumber(15,1+j, elem_RedSizeXtst[j].getValue());
+                tabla.addNumber(17,1+j, b.doubleValue());
             }
             tabla.write();
         }

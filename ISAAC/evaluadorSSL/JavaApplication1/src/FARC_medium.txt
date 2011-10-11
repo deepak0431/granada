@@ -1,3 +1,4 @@
+Ignore-MV.FARC-HD
 Ignore-MV.CHC-TSS.FARC-HD
 Ignore-MV.CHClassic-TSS.FARC-HD
 Ignore-MV.IS-SSMA.FARC-HD
@@ -10,7 +11,13 @@ Ignore-MV.IS-HMNEI.FARC-HD
 Ignore-MV.IS-IB3.FARC-HD
 Ignore-MV.IS-ICF.FARC-HD
 Ignore-MV.IS-MCNN.FARC-HD
+Ignore-MV.IS-MENN.FARC-HD
+Ignore-MV.IS-ModelCS.FARC-HD
 Ignore-MV.IS-MSS.FARC-HD
+Ignore-MV.IS-POP.FARC-HD
+Ignore-MV.IS-Reconsistent.FARC-HD
+Ignore-MV.IS-RMHC.FARC-HD
+Ignore-MV.IS-RNG.FARC-HD
 
 ----
 

@@ -6,7 +6,7 @@
  */
 
 /**
- * @author Jesús Alcalá Fernández
+ * @author Jesï¿½s Alcalï¿½ Fernï¿½ndez
  *
  *
  */
@@ -44,6 +44,26 @@ public class Fichero{
 
     return cadena;
   }
+  public static String myleeFichero(String filePath){
+     try {
+      
+        StringBuilder fileData = new StringBuilder(1000);
+        BufferedReader reader = new BufferedReader(
+                new FileReader(filePath));
+        char[] buf = new char[1024];
+        int numRead=0;
+        while((numRead=reader.read(buf)) != -1){
+            fileData.append(buf, 0, numRead);
+        }
+        reader.close();
+        return fileData.toString();
+        }
+    catch (IOException e) {
+        //e.printStackTrace();
+        //System.exit(-1);
+    	return "-1";
+        }
+    }
 
 
   public static void escribeFichero (String nombreFichero, String cadena) {

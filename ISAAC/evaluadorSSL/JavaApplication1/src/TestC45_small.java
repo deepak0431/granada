@@ -113,6 +113,7 @@ public class TestC45_small {
                 writeTableAvg_rank();
                 write_table_excel();
                 writeTable_Bests();
+                writeTable_BestsS();
                 
                 //WRITING THE CSV
                 writeCSVs();
@@ -147,7 +148,7 @@ public class TestC45_small {
             saltos = new Vector <Integer>();
 
             /*Lectura del fichero de configuraci�n*/
-            cadena = Fichero.leeFichero(args[0]);
+            cadena = Fichero.myleeFichero(args[0]);
             lineas = new StringTokenizer (cadena,"\n\r");
             while (lineas.hasMoreTokens()) {
                     linea = lineas.nextToken();
@@ -192,7 +193,7 @@ public class TestC45_small {
             redV = new double[10];
             kappaV = new double[10];
 
-            //tiempos = Fichero.leeFichero("tiempos.txt");
+            //tiempos = Fichero.myleeFichero("tiempos.txt");
 
             System.out.println("Numbero de algoritmos "+ algoritmos.size());
             /*C�lculo del accuracy, kappa y reducci�n en KNN (TRAIN)*/
@@ -236,11 +237,11 @@ public class TestC45_small {
                                     /*Accuracy Computation*/
 
 
-                                    cadena = Fichero.leeFichero("SMALL\\resultsC45\\"
+                                    cadena = Fichero.myleeFichero("SMALL\\resultsC45\\"
                                             +alAct+"."+datasets.get(j)+"\\result"+Integer.toString(k)+".tst");
 
                                     if(cadena.equals("-1")){
-                                            cadena = Fichero.leeFichero("SMALL\\resultsC45\\"+alAct+"."+datasets.get(j)+"\\result"+Integer.toString(k+10)+".tst");
+                                            cadena = Fichero.myleeFichero("SMALL\\resultsC45\\"+alAct+"."+datasets.get(j)+"\\result"+Integer.toString(k+10)+".tst");
                                     }
 
 
@@ -306,12 +307,12 @@ public class TestC45_small {
                                     String nomeCompleto=directory+nomeFile+"."+datasets.get(j)
                                             +"\\"+nomeFile+"."+datasets.get(j)+"-10-"+k+"tra.dat";
  
-                                    cadena = Fichero.leeFichero(nomeCompleto);
+                                    cadena = Fichero.myleeFichero(nomeCompleto);
                                     
                                     if(cadena.equals("-1")){
                                         nomeCompleto=directory+nomeFile+"."+datasets.get(j)
                                                 +"\\"+nomeFile+"s0."+datasets.get(j)+"-10-"+k+"tra.dat";
-                                        cadena = Fichero.leeFichero(nomeCompleto);
+                                        cadena = Fichero.myleeFichero(nomeCompleto);
                                     }
                                     
                                     //System.out.println(nomeCompleto);
@@ -353,11 +354,11 @@ public class TestC45_small {
                                     /*Accuracy Computation*/
 
 
-                                    cadena = Fichero.leeFichero("SMALL\\resultsC45\\"
+                                    cadena = Fichero.myleeFichero("SMALL\\resultsC45\\"
                                             +alAct+"."+datasets.get(j)+"\\result"+Integer.toString(k)+".tra");
 
                                     if(cadena.equals("-1")){
-                                            cadena = Fichero.leeFichero("SMALL\\resultsC45\\"+alAct+"."+datasets.get(j)+"\\result"+Integer.toString(k+10)+".tra");
+                                            cadena = Fichero.myleeFichero("SMALL\\resultsC45\\"+alAct+"."+datasets.get(j)+"\\result"+Integer.toString(k+10)+".tra");
                                     }
 
 
@@ -430,11 +431,11 @@ public class TestC45_small {
 					/*Accuracy Computation*/
 
 					
-					cadena = Fichero.leeFichero("SMALL\\resultsC45\\"
+					cadena = Fichero.myleeFichero("SMALL\\resultsC45\\"
                                                 +alAct+"."+datasets.get(j)+"\\result"+Integer.toString(k)+"e0.txt");
 					
                                         if(cadena.equals("-1")){
-						cadena = Fichero.leeFichero("SMALL\\resultsC45\\"
+						cadena = Fichero.myleeFichero("SMALL\\resultsC45\\"
                                                 +alAct+"."+datasets.get(j)+"\\result"+Integer.toString(k+10)+"e0.txt");
 					}
 					
@@ -573,6 +574,36 @@ public class TestC45_small {
                    b=new BigDecimal(redSize).setScale(precision,BigDecimal.ROUND_HALF_UP);
                    tabla.addNumber(j*4+4,1+i, b.doubleValue()); 
                    tabla.addString12pt(j*4+4, 0, "Red");
+               }
+            }
+            tabla.write();
+        }
+        
+        private static void writeTable_BestsS()throws IOException, WriteException{
+           MyExcelWriter tabla = new MyExcelWriter();
+           tabla.setOutputFile("SMALL\\Tablas\\FARC\\ExcelC45_smallBestsS.xls");
+           tabla.create("tablaC45");
+        
+           for (int i=0; i<datasets.size(); i++){
+               //writing the names of the datasets
+               tabla.addString12pt(0, 1+i, datasets.elementAt(i));
+               /* We are writing the values of the algorithms that perform better 
+                * equal to the FARC Algorithm (without the Instance selection)
+                */
+               ElementIndex elem_dataset_rank[]=ArrayIndex.createArray(ranks_matr[i]);
+               Arrays.sort(elem_dataset_rank);
+        
+               /* Still there's an algorithm with a rank equal or bigger then the 
+                * FARC's algorithm continues the loop.
+                */
+               for(int j=0;elem_dataset_rank[j].getValue()<=ranks_matr[i][0];j++){
+                   BigDecimal b; 
+                   int index=elem_dataset_rank[j].getIndex();
+                   double redSize= 1 - (numeroNodi[i][index]/numeroNodi[i][0]);
+                   if (redSize>0)
+                       tabla.addCaption(j*1+6,1+i, sel_alg.elementAt(index));
+                   else
+                       tabla.addString(j*1+6,1+i, sel_alg.elementAt(index));
                }
             }
             tabla.write();
