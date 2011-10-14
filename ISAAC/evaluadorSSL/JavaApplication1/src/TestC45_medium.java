@@ -580,20 +580,20 @@ public class TestC45_medium {
         
         private static void writeTable_BestsS()throws IOException, WriteException{
            MyExcelWriter tabla = new MyExcelWriter();
-           tabla.setOutputFile("MEDIUM\\Tablas\\FARC\\ExcelC45_smallBestsS.xls");
+           tabla.setOutputFile("MEDIUM\\Tablas\\C45\\ExcelC45_smallBestsS.xls");
            tabla.create("tablaC45");
         
            for (int i=0; i<datasets.size(); i++){
                //writing the names of the datasets
                tabla.addString12pt(0, 1+i, datasets.elementAt(i));
                /* We are writing the values of the algorithms that perform better 
-                * equal to the FARC Algorithm (without the Instance selection)
+                * equal to the C45 Algorithm (without the Instance selection)
                 */
                ElementIndex elem_dataset_rank[]=ArrayIndex.createArray(ranks_matr[i]);
                Arrays.sort(elem_dataset_rank);
         
                /* Still there's an algorithm with a rank equal or bigger then the 
-                * FARC's algorithm continues the loop.
+                * C45's algorithm continues the loop.
                 */
                for(int j=0;elem_dataset_rank[j].getValue()<=ranks_matr[i][0];j++){
                    BigDecimal b; 

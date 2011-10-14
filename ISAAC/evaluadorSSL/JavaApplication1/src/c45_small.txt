@@ -28,7 +28,7 @@ Ignore-MV.IS-ENNTh.C45-C
 Ignore-MV.IS-ENRBF.C45-C
 Ignore-MV.IS-Explore.C45-C
 Ignore-MV.IS-GCNN.C45-C
-Ignore-MV.IS-IGA.C45-C 
+Ignore-MV.IS-IGA.C45-C
 Ignore-MV.IS-MCS.C45-C
 Ignore-MV.IS-MNV.C45-C
 Ignore-MV.IS-Multiedit.C45-C

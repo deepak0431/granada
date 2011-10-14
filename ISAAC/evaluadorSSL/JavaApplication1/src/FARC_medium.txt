@@ -2,6 +2,7 @@ Ignore-MV.FARC-HD
 Ignore-MV.CHC-TSS.FARC-HD
 Ignore-MV.CHClassic-TSS.FARC-HD
 Ignore-MV.IS-SSMA.FARC-HD
+Ignore-MV.SGA-TSS.FARC-HD
 Ignore-MV.IS-AllKNN.FARC-HD
 Ignore-MV.IS-CNN.FARC-HD
 Ignore-MV.IS-CPruner.FARC-HD
@@ -18,6 +19,16 @@ Ignore-MV.IS-POP.FARC-HD
 Ignore-MV.IS-Reconsistent.FARC-HD
 Ignore-MV.IS-RMHC.FARC-HD
 Ignore-MV.IS-RNG.FARC-HD
+Ignore-MV.IS-ENN.FARC-HD
+Ignore-MV.IS-ENNTh.FARC-HD
+Ignore-MV.IS-ENRBF.FARC-HD
+Ignore-MV.IS-Explore.FARC-HD
+Ignore-MV.IS-MCS.FARC-HD
+Ignore-MV.IS-MNV.FARC-HD
+Ignore-MV.IS-Multiedit.FARC-HD
+Ignore-MV.IS-NCNEdit.FARC-HD
+Ignore-MV.IS-TCNN.FARC-HD
+Ignore-MV.IS-VSM.FARC-HD
 
 ----
 
@@ -26,6 +37,6 @@ page-blocks-10fold 0
 penbased-10fold 0
 ring-10fold 0
 thyroid-10fold 0
-satimage-10fold 0
 nursery-10fold 0
+satimage-10fold 0
 coil2000-10fold 0

@@ -56,7 +56,7 @@ import java.util.logging.Logger;
  */
 public class C45 extends Algorithm {
     /** Decision tree. */
-    private Tree root;
+    public Tree root;
 
 
     /** Is the tree pruned or not. */

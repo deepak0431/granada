@@ -135,7 +135,7 @@ public class TestFARC_medium {
                 //print_redSize();
         }
     private static void calculate_values(){
-            //calcolo_tempo();
+            calcolo_tempo();
             System.out.println("calcolo acc_tst");
             calcolo_accurancy();
             System.out.println("calcolo acc_tra");
@@ -304,6 +304,7 @@ public class TestFARC_medium {
                     for (int j=0; j<datasets.size(); j++) {
                         datAct = (String)datasets.elementAt(j);
                         acc = red = kappa = 0.0;
+                        index_str = 0;
                         for (int k=0; k<10; k++) {
                             /* Filtering the databases with stranges names :-)
                              */
@@ -323,7 +324,9 @@ public class TestFARC_medium {
                                 //non ha trovato la search string
                                 System.out.println("Error searching the time of the "
                                         + "algorithm "+sel_alg.elementAt(i)+" in the "
-                                        + k +"st time");
+                                        + k +"st time"+ " for the dataset "+ datAct );
+                                System.out.println("search string is: "
+                                        + search_str );
                                 System.exit(1);
                                 
                             }else{

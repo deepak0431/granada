@@ -122,12 +122,20 @@ public class TestC45_small {
                 //print_redSize();
         }
         private static void calculate_values(){
+            System.out.println("calcolo acc_tst");
             calcolo_accurancy();
+            System.out.println("calcolo acc_tra");
             calcolo_accurancy_tra();
-
+    
+            System.out.println("calcolo red");
             calcolo_Red();
+            
+            System.out.println("calcolo nodi_ant");
             calcolo_nodi_ant();
+            
+            System.out.println("calcolo friedman");
             calculate_friedman();
+            System.out.println("calcolo RedAVG");
             calculate_redAVG();
         }
         
@@ -224,7 +232,7 @@ public class TestC45_small {
             /* Istruzioni eseguite per ognuno degli algoritmi */
             for (int i=0; i<algoritmos.size(); i++) {
                     alAct = (String)algoritmos.elementAt(i);
-                    System.out.println("Processing algorithm: " + alAct);
+                    //System.out.println("Processing algorithm: " + alAct);
             
                     /* Per ognuno dei datasets presenti (indipendentemente dal numero di elementi del dataset)*/
                     for (int j=0; j<datasets.size(); j++) {
@@ -233,7 +241,9 @@ public class TestC45_small {
                             acc = red = kappa = 0.0;
                             aciertos = 0;
                             total = 0;
+                            //System.out.println("Processing dataset: " + datAct);
                             for (int k=0; k<10; k++) {
+                                    //System.out.println("Processing index: " + k);
                                     /*Accuracy Computation*/
 
 
@@ -243,7 +253,10 @@ public class TestC45_small {
                                     if(cadena.equals("-1")){
                                             cadena = Fichero.myleeFichero("SMALL\\resultsC45\\"+alAct+"."+datasets.get(j)+"\\result"+Integer.toString(k+10)+".tst");
                                     }
-
+                                    if(cadena.equals("-1")){
+                                        System.out.println("File non trovato :"+ "SMALL\\resultsC45\\"
+                                            +alAct+"."+datasets.get(j)+"\\result"+Integer.toString(k)+".tst");
+                                    }
 
                                     //System.out.println(datasets.get(j));
                                     //System.out.println(cadena);
@@ -581,7 +594,7 @@ public class TestC45_small {
         
         private static void writeTable_BestsS()throws IOException, WriteException{
            MyExcelWriter tabla = new MyExcelWriter();
-           tabla.setOutputFile("SMALL\\Tablas\\FARC\\ExcelC45_smallBestsS.xls");
+           tabla.setOutputFile("SMALL\\Tablas\\C45\\ExcelC45_smallBestsS.xls");
            tabla.create("tablaC45");
         
            for (int i=0; i<datasets.size(); i++){
