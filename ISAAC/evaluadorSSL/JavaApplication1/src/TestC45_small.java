@@ -6,10 +6,6 @@ import writer.*;
 import java.io.IOException;
 import jxl.write.WriteException;
 
-// For the Friedman's test
-import jsc.datastructures.MatchedData;
-import jsc.relatedsamples.FriedmanTest;
-
 // class created to have indexed arrays of doubles
 import myUtility.*;
 
@@ -90,6 +86,7 @@ public class TestC45_small {
     static ElementIndex elem_ranks_RedSizeXtst[];
     static ElementIndex elem_ranks_ISRedXtst[];
    
+    static DB_info datasets_info [];
     
     public static void main(String[] args) throws IOException, WriteException {
 		
@@ -195,6 +192,7 @@ public class TestC45_small {
             RedSizeXtst= new double[datasets.size()][algoritmos.size()];
             RedXtst= new double[datasets.size()][algoritmos.size()];
              
+            datasets_info= new DB_info[datasets.size()];
 
             runs = new int[datasets.size()][algoritmos.size()];
             accV = new double[10];
@@ -207,9 +205,8 @@ public class TestC45_small {
             /*C�lculo del accuracy, kappa y reducci�n en KNN (TRAIN)*/
             configAct = 0;
             
-
-            
             nomi_selAlg(); 
+            generate_DBvector();
         }
         
         private static void nomi_selAlg(){
@@ -227,6 +224,29 @@ public class TestC45_small {
             }
         }
         
+        public static void generate_DBvector(){
+            
+            cadena = Fichero.myleeFichero("SMALL\\Tablas\\datasets.txt");
+            if (cadena.equals("-1")){
+                System.out.println("file 'datasets.txt' not found");
+                System.exit(-1);
+            }
+            lineas = new StringTokenizer (cadena,"\n\r");
+            for (int i=0;lineas.hasMoreTokens();i++){
+                linea = lineas.nextToken();
+                //System.out.println(i);
+                tokens = new StringTokenizer (linea,"\t");
+                datasets_info[i]=new DB_info();
+                
+                datasets_info[i].name = tokens.nextToken();
+                datasets_info[i].IS_num = tokens.nextToken();
+                datasets_info[i].classNum = Integer.parseInt(tokens.nextToken());
+                datasets_info[i].numericAttr = Integer.parseInt(tokens.nextToken());
+                datasets_info[i].nominalAttr = Integer.parseInt(tokens.nextToken());
+                datasets_info[i].IS_div_attr = Double.parseDouble(tokens.nextToken().replaceAll(",","."));
+            }
+            
+        }
         
         private static void calcolo_accurancy(){
             /* Istruzioni eseguite per ognuno degli algoritmi */
@@ -554,9 +574,20 @@ public class TestC45_small {
            tabla.setOutputFile("SMALL\\Tablas\\C45\\ExcelC45_smallBests.xls");
            tabla.create("tablaC45");
            
+           tabla.addString12pt(1, 0, "#IS");
+           tabla.addString12pt(2, 0, "#class");
+           tabla.addString12pt(3, 0, "#num");
+           tabla.addString12pt(4, 0, "#nom");
+           tabla.addString12pt(5, 0, "IS/(num+nom)");
            for (int i=0; i<datasets.size(); i++){
-               //writing the names of the datasets
-               tabla.addString12pt(0, 1+i, datasets.elementAt(i));
+               //writing the datasets' info
+               tabla.addString12pt(0, 1+i, datasets_info[i].name);
+               tabla.addString(1, 1+i, datasets_info[i].IS_num);
+               tabla.addNumber(2, 1+i, datasets_info[i].classNum);
+               tabla.addNumber(3, 1+i, datasets_info[i].numericAttr);
+               tabla.addNumber(4, 1+i, datasets_info[i].nominalAttr);
+               tabla.addNumberBordR(5, 1+i, datasets_info[i].IS_div_attr);
+               
                /* We are writing the values of the algorithms that perform better 
                 * equal to the C45 Algorithm (without the Instance selection)
                 */
@@ -572,21 +603,21 @@ public class TestC45_small {
                    int index=elem_dataset_rank[j].getIndex();
                    double redSize= 1 - (numeroNodi[i][index]/numeroNodi[i][0]);
                    if (redSize>0)
-                       tabla.addCaption(j*4+1,1+i, sel_alg.elementAt(index));
+                       tabla.addCaption(j*4+6,1+i, sel_alg.elementAt(index));
                    else
-                       tabla.addString(j*4+1,1+i, sel_alg.elementAt(index));
+                       tabla.addString(j*4+6,1+i, sel_alg.elementAt(index));
                    
                    b=new BigDecimal(accuracyTst[i][index]).setScale(precision,BigDecimal.ROUND_HALF_UP);
-                   tabla.addNumber(j*4+2,1+i, b.doubleValue()); 
-                   tabla.addString12pt(j*4+2, 0, "Tst");
+                   tabla.addNumber(j*4+7,1+i, b.doubleValue()); 
+                   tabla.addString12pt(j*4+7, 0, "Tst");
                    
                    b=new BigDecimal(numeroNodi[i][index]/20).setScale(precision,BigDecimal.ROUND_HALF_UP);
-                   tabla.addNumber(j*4+3,1+i, b.doubleValue()); 
-                   tabla.addString12pt(j*4+3, 0, "#Sz");
+                   tabla.addNumber(j*4+8,1+i, b.doubleValue()); 
+                   tabla.addString12pt(j*4+8, 0, "#Sz");
                    
                    b=new BigDecimal(redSize).setScale(precision,BigDecimal.ROUND_HALF_UP);
-                   tabla.addNumber(j*4+4,1+i, b.doubleValue()); 
-                   tabla.addString12pt(j*4+4, 0, "Red");
+                   tabla.addNumber(j*4+9,1+i, b.doubleValue()); 
+                   tabla.addString12pt(j*9+4, 0, "Red");
                }
             }
             tabla.write();
@@ -597,9 +628,20 @@ public class TestC45_small {
            tabla.setOutputFile("SMALL\\Tablas\\C45\\ExcelC45_smallBestsS.xls");
            tabla.create("tablaC45");
         
+           tabla.addString12pt(1, 0, "#IS");
+           tabla.addString12pt(2, 0, "#class");
+           tabla.addString12pt(3, 0, "#num");
+           tabla.addString12pt(4, 0, "#nom");
+           tabla.addString12pt(5, 0, "IS/(num+nom)");
            for (int i=0; i<datasets.size(); i++){
-               //writing the names of the datasets
-               tabla.addString12pt(0, 1+i, datasets.elementAt(i));
+               //writing the datasets' info
+               tabla.addString12pt(0, 1+i, datasets_info[i].name);
+               tabla.addString(1, 1+i, datasets_info[i].IS_num);
+               tabla.addNumber(2, 1+i, datasets_info[i].classNum);
+               tabla.addNumber(3, 1+i, datasets_info[i].numericAttr);
+               tabla.addNumber(4, 1+i, datasets_info[i].nominalAttr);
+               tabla.addNumberBordR(5, 1+i, datasets_info[i].IS_div_attr);
+               
                /* We are writing the values of the algorithms that perform better 
                 * equal to the FARC Algorithm (without the Instance selection)
                 */

@@ -28,6 +28,7 @@ public class MyExcelWriter {
 	private WritableCellFormat times12ptBoldline;
 	private WritableCellFormat times;
         private WritableCellFormat timesLborder;
+        private WritableCellFormat timesRborder;
 	private String inputFile;
         public  WritableSheet excelSheet;
         private String sheetName;
@@ -70,6 +71,11 @@ public void setOutputFile(String inputFile) {
                 timesLborder.setWrap(true);  
                 timesLborder.setBorder(Border.LEFT, BorderLineStyle.THIN);
                         
+                // same format with border on the right part 
+                timesRborder = new WritableCellFormat(times10pt);
+                timesRborder.setWrap(true);  
+                timesRborder.setBorder(Border.RIGHT, BorderLineStyle.THICK);
+                
 		// Create create a bold font with unterlines
 		WritableFont times10ptBoldUnderline = new WritableFont(
 				WritableFont.TIMES, 10, WritableFont.BOLD, false,
@@ -144,6 +150,13 @@ public void setOutputFile(String inputFile) {
 			double integer) throws WriteException, RowsExceededException {
 		Number number;
 		number = new Number(column, row, integer, times);
+		excelSheet.addCell(number);
+	}
+        
+        public void addNumberBordR(int column, int row,
+			double integer) throws WriteException, RowsExceededException {
+		Number number;
+		number = new Number(column, row, integer, timesRborder);
 		excelSheet.addCell(number);
 	}
         
