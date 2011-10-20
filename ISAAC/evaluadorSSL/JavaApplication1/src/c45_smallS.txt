@@ -1,0 +1,34 @@
+Ignore-MV.C45-C
+Ignore-MV.IS-AllKNN.C45-C
+Ignore-MV.IS-HMNEI.C45-C
+Ignore-MV.IS-MENN.C45-C
+Ignore-MV.IS-ModelCS.C45-C
+Ignore-MV.IS-POP.C45-C
+Ignore-MV.IS-RNG.C45-C
+Ignore-MV.IS-ENN.C45-C
+Ignore-MV.IS-ENNTh.C45-C
+Ignore-MV.IS-Multiedit.C45-C
+Ignore-MV.IS-NCNEdit.C45-C
+
+----
+
+bupa 0
+cleveland 0
+ecoli 0
+glass 0
+haberman 0
+iris 0
+new-thyroid 0
+pima 0
+vehicle 0
+wine 0
+wisconsin 0
+australian-10fold 0 
+automobile-10fold 0
+balance-10fold 0
+contraceptive-10fold 0
+crx-10fold 0 
+german-10fold 0
+heart-10fold 0
+hepatitis-10fold 0
+tae-10fold 0

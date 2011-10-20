@@ -7,6 +7,7 @@ import java.util.Locale;
 import jxl.CellView;
 import jxl.Workbook;
 import jxl.WorkbookSettings;
+import jxl.format.Alignment;
 import jxl.format.Border;
 import jxl.format.BorderLineStyle;
 import jxl.format.UnderlineStyle;
@@ -88,6 +89,7 @@ public void setOutputFile(String inputFile) {
 		WritableFont times14ptBold = new WritableFont(
 				WritableFont.TIMES, 14, WritableFont.BOLD, false);
 		times14ptBoldline = new WritableCellFormat(times14ptBold);
+                //times14ptBoldline.setAlignment(Alignment.CENTRE);
 		// Lets automatically wrap the cells
 		times14ptBoldline.setWrap(false);
                 
@@ -95,6 +97,7 @@ public void setOutputFile(String inputFile) {
 		WritableFont times12ptBold = new WritableFont(
 				WritableFont.TIMES, 12, WritableFont.BOLD, false);
 		times12ptBoldline = new WritableCellFormat(times12ptBold);
+                //times12ptBoldline.setAlignment(Alignment.CENTRE);
 		// Lets automatically wrap the cells
 		times12ptBoldline.setWrap(false);
 

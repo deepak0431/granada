@@ -317,7 +317,7 @@ public class TestFARC_small {
 
                     //a qsto punto dovrei avere il nome dell'algoritmo
 
-                    System.out.println("Calculating time algorithm: " + alAct+"\n");
+                    //System.out.println("Calculating time algorithm: " + alAct+"\n");
                     //System.out.println("nome algoritmo:" + sel_alg.elementAt(i) + "\n");
                     
                     //lineas = new StringTokenizer (cadena, "\n\r");
@@ -362,7 +362,7 @@ public class TestFARC_small {
                         }
                     }
                 }
-                System.out.println("END Calculating time algorithm: " + alAct+"\n");
+                //System.out.println("END Calculating time algorithm: " + alAct+"\n");
             }   
         }
                     
@@ -455,16 +455,20 @@ public class TestFARC_small {
                                     }        
                                     //nomeFile+="."+datasets.get(j);                                 
                                     String nomeCompleto=directory+nomeFile+"."+datasets.get(j)
-                                            +"\\"+nomeFile+"."+datasets.get(j)+"-10-"+k+"tra.dat";
+                                            +"\\"+nomeFile+"."+datasets.get(j)+"-10-"+(k+1)+"tra.dat";
  
                                     cadena = Fichero.myleeFichero(nomeCompleto);
                                     
                                     if(cadena.equals("-1")){
                                         nomeCompleto=directory+nomeFile+"."+datasets.get(j)
-                                                +"\\"+nomeFile+"s0."+datasets.get(j)+"-10-"+k+"tra.dat";
+                                                +"\\"+nomeFile+"s0."+datasets.get(j)+"-10-"+(k+1)+"tra.dat";
                                         cadena = Fichero.myleeFichero(nomeCompleto);
                                     }
-                                    
+                                    if(cadena.equals("-1")){
+                                        System.out.println("Problem determning the IS_reduction for the algorithm: "+alAct);
+                                        System.out.println("File not found: "+nomeCompleto);
+                                        System.exit(-1);
+                                    }
                                     //System.out.println(nomeCompleto);
                                     //System.out.println(nomeFile);
                                     
@@ -481,7 +485,7 @@ public class TestFARC_small {
                                     }
                                 }
                             //System.out.println(numberInstancesRed[j][i]);
-                            numberInstancesRed[j][i] = (numberInstancesRed[j][i]/81)*10;
+                            numberInstancesRed[j][i] = (numberInstancesRed[j][i]/90)*10;
                             
                         }
             }
@@ -691,6 +695,7 @@ public class TestFARC_small {
            MyExcelWriter tabla = new MyExcelWriter();
            tabla.setOutputFile("SMALL\\Tablas\\FARC\\ExcelFARC_smallBests.xls");
            tabla.create("tablaFARC");
+           tabla.excelSheet.setColumnView(5, 15);
         
            tabla.addString12pt(1, 0, "#IS");
            tabla.addString12pt(2, 0, "#class");
@@ -715,7 +720,7 @@ public class TestFARC_small {
                /* Still there's an algorithm with a rank equal or bigger then the 
                 * FARC's algorithm continues the loop.
                 */
-               for(int j=0;elem_dataset_rank[j].getValue()<=ranks_matr[i][0];j++){
+               for(int j=0;j<sel_alg.size() && elem_dataset_rank[j].getValue()<=ranks_matr[i][0];j++){
                    BigDecimal b; int precisionBig=3;int precision=2;
                    
                    int index=elem_dataset_rank[j].getIndex();
@@ -745,6 +750,7 @@ public class TestFARC_small {
            MyExcelWriter tabla = new MyExcelWriter();
            tabla.setOutputFile("SMALL\\Tablas\\FARC\\ExcelFARC_smallBestsS.xls");
            tabla.create("tablaFARC");
+           tabla.excelSheet.setColumnView(5, 15);
         
            tabla.addString12pt(1, 0, "#IS");
            tabla.addString12pt(2, 0, "#class");
@@ -770,7 +776,7 @@ public class TestFARC_small {
                /* Still there's an algorithm with a rank equal or bigger then the 
                 * FARC's algorithm continues the loop.
                 */
-               for(int j=0;elem_dataset_rank[j].getValue()<=ranks_matr[i][0];j++){
+               for(int j=0;j<sel_alg.size() && elem_dataset_rank[j].getValue()<=ranks_matr[i][0];j++){
                    BigDecimal b; 
                    int index=elem_dataset_rank[j].getIndex();
                    double redSize= 1 - (numeroNodi[i][index]/numeroNodi[i][0]);

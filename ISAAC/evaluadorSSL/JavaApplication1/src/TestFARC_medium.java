@@ -458,16 +458,20 @@ public class TestFARC_medium {
                                     }        
                                     //nomeFile+="."+datasets.get(j);                                 
                                     String nomeCompleto=directory+nomeFile+"."+datasets.get(j)
-                                            +"\\"+nomeFile+"."+datasets.get(j)+"-10-"+k+"tra.dat";
+                                            +"\\"+nomeFile+"."+datasets.get(j)+"-10-"+(k+1)+"tra.dat";
  
                                     cadena = Fichero.myleeFichero(nomeCompleto);
                                     
                                     if(cadena.equals("-1")){
                                         nomeCompleto=directory+nomeFile+"."+datasets.get(j)
-                                                +"\\"+nomeFile+"s0."+datasets.get(j)+"-10-"+k+"tra.dat";
+                                                +"\\"+nomeFile+"s0."+datasets.get(j)+"-10-"+(k+1)+"tra.dat";
                                         cadena = Fichero.myleeFichero(nomeCompleto);
                                     }
-                                    
+                                    if(cadena.equals("-1")){
+                                        System.out.println("Problem determning the IS_reduction for the algorithm: "+alAct);
+                                        System.out.println("File not found: "+nomeCompleto);
+                                        System.exit(-1);
+                                    }
                                     //System.out.println(nomeCompleto);
                                     //System.out.println(nomeFile);
                                     
@@ -484,7 +488,7 @@ public class TestFARC_medium {
                                     }
                                 }
                             //System.out.println(numberInstancesRed[j][i]);
-                            numberInstancesRed[j][i] = (numberInstancesRed[j][i]/81)*10;
+                            numberInstancesRed[j][i] = (numberInstancesRed[j][i]/90)*10;
                             
                         }
             }
@@ -694,6 +698,7 @@ public class TestFARC_medium {
            MyExcelWriter tabla = new MyExcelWriter();
            tabla.setOutputFile("MEDIUM\\Tablas\\FARC\\ExcelFARC_mediumBests.xls");
            tabla.create("tablaFARC");
+           tabla.excelSheet.setColumnView(5, 15);
            
            tabla.addString12pt(1, 0, "#IS");
            tabla.addString12pt(2, 0, "#class");
@@ -748,6 +753,7 @@ public class TestFARC_medium {
            MyExcelWriter tabla = new MyExcelWriter();
            tabla.setOutputFile("MEDIUM\\Tablas\\FARC\\ExcelFARC_mediumBestsS.xls");
            tabla.create("tablaFARC");
+           tabla.excelSheet.setColumnView(5, 15);
         
            tabla.addString12pt(1, 0, "#IS");
            tabla.addString12pt(2, 0, "#class");

@@ -1043,6 +1043,16 @@
 			  keel/Dataset/**/*.class"/>
 		</jar>
                 
+                <jar
+			  jarfile="${distPre}/IS-CHC45_3.jar"
+			  manifest="${src}/keel/Algorithms/Preprocess/Instance_Selection/CHC45_3/Manifest">
+			  <fileset dir="${bin}"
+				 includes="keel/Algorithms/Preprocess/Instance_Selection/CHC45_3/**/*.class"/>
+			  <fileset dir="${bin}" includes="keel/Algorithms/Preprocess/Basic/**/*.class
+			  org/core/**/*.class
+			  keel/Dataset/**/*.class"/>
+		</jar>
+                
                 <!-- END ADDED -->
                 
                 <!-- ADDED to execute de IS-CHClassic-TSS -->

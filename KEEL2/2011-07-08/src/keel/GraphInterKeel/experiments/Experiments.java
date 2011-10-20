@@ -116,7 +116,7 @@ public class Experiments extends javax.swing.JFrame implements ItemListener, IEd
     static final int P5X2 = 1;
     static final int PnoVal = 2;
     //END OF STATIC VARIABLES
-    public int heapSize = 512; //- Java performance option variables
+    public int heapSize = 3072; //- Java performance option variables
     public int numberKFoldCross = 10;
     public boolean notSelectedDataset = true;
     public String root;

@@ -338,16 +338,20 @@ public class TestC45_small {
                                     }        
                                     //nomeFile+="."+datasets.get(j);                                 
                                     String nomeCompleto=directory+nomeFile+"."+datasets.get(j)
-                                            +"\\"+nomeFile+"."+datasets.get(j)+"-10-"+k+"tra.dat";
+                                            +"\\"+nomeFile+"."+datasets.get(j)+"-10-"+(k+1)+"tra.dat";
  
                                     cadena = Fichero.myleeFichero(nomeCompleto);
                                     
                                     if(cadena.equals("-1")){
                                         nomeCompleto=directory+nomeFile+"."+datasets.get(j)
-                                                +"\\"+nomeFile+"s0."+datasets.get(j)+"-10-"+k+"tra.dat";
+                                                +"\\"+nomeFile+"s0."+datasets.get(j)+"-10-"+(k+1)+"tra.dat";
                                         cadena = Fichero.myleeFichero(nomeCompleto);
                                     }
-                                    
+                                    if(cadena.equals("-1")){
+                                        System.out.println("Problem determning the IS_reduction for the algorithm: "+alAct);
+                                        System.out.println("File not found: "+nomeCompleto);
+                                        System.exit(-1);
+                                    }
                                     //System.out.println(nomeCompleto);
                                     //System.out.println(nomeFile);
                                     
@@ -364,7 +368,7 @@ public class TestC45_small {
                                     }
                                 }
                             //System.out.println(numberInstancesRed[j][i]);
-                            numberInstancesRed[j][i] = (numberInstancesRed[j][i]/81)*10;
+                            numberInstancesRed[j][i] = (numberInstancesRed[j][i]/90)*10;
                             
                         }
             }
@@ -573,6 +577,7 @@ public class TestC45_small {
            MyExcelWriter tabla = new MyExcelWriter();
            tabla.setOutputFile("SMALL\\Tablas\\C45\\ExcelC45_smallBests.xls");
            tabla.create("tablaC45");
+           tabla.excelSheet.setColumnView(5, 15);
            
            tabla.addString12pt(1, 0, "#IS");
            tabla.addString12pt(2, 0, "#class");
@@ -617,7 +622,7 @@ public class TestC45_small {
                    
                    b=new BigDecimal(redSize).setScale(precision,BigDecimal.ROUND_HALF_UP);
                    tabla.addNumber(j*4+9,1+i, b.doubleValue()); 
-                   tabla.addString12pt(j*9+4, 0, "Red");
+                   tabla.addString12pt(j*4+9, 0, "Red");
                }
             }
             tabla.write();
@@ -627,6 +632,7 @@ public class TestC45_small {
            MyExcelWriter tabla = new MyExcelWriter();
            tabla.setOutputFile("SMALL\\Tablas\\C45\\ExcelC45_smallBestsS.xls");
            tabla.create("tablaC45");
+           tabla.excelSheet.setColumnView(5, 15);
         
            tabla.addString12pt(1, 0, "#IS");
            tabla.addString12pt(2, 0, "#class");

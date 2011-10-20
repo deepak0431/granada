@@ -1,0 +1,35 @@
+Ignore-MV.FARC-HD
+Ignore-MV.IS-AllKNN.FARC-HD
+Ignore-MV.IS-HMNEI.FARC-HD
+Ignore-MV.IS-MENN.FARC-HD
+Ignore-MV.IS-ModelCS.FARC-HD
+Ignore-MV.IS-MSS.FARC-HD
+Ignore-MV.IS-POP.FARC-HD
+Ignore-MV.IS-RNG.FARC-HD
+Ignore-MV.IS-ENN.FARC-HD
+Ignore-MV.IS-ENNTh.FARC-HD
+Ignore-MV.IS-Multiedit.FARC-HD
+Ignore-MV.IS-NCNEdit.FARC-HD
+
+----
+
+bupa 0
+cleveland 0
+ecoli 0
+glass 0
+haberman 0
+iris 0
+new-thyroid 0
+pima 0
+vehicle 0
+wine 0
+wisconsin 0
+australian-10fold 0 
+automobile-10fold 0
+balance-10fold 0
+contraceptive-10fold 0
+crx-10fold 0 
+german-10fold 0
+heart-10fold 0
+hepatitis-10fold 0
+tae-10fold 0
