@@ -26,7 +26,7 @@ public class Cromosoma implements Comparable {
 
   /*Useless data for cromosomes*/
   double calidad;
-  boolean cruzado;
+  boolean evaluated;
   boolean valido;
   double errorRate;
   
@@ -39,40 +39,38 @@ public class Cromosoma implements Comparable {
   myRand generator;
 
   /* Construct a random cromosome of specified size(OK) */
-  public Cromosoma (int size) {
+  public Cromosoma (int size,myRand genpassed) {
 
     double u;
     int i;
-    generator = new myRand(1493);
+    generator = genpassed;
     
     cuerpo = new boolean[size];
     for (i=0; i<size; i++) {
       cuerpo[i]=generator.getBool();
     }
-    cruzado = true;
+    evaluated = false;
     valido = true;
   }
 
   /*Create a copied cromosome (OK)*/
-  public Cromosoma (int size, Cromosoma a) {
-    int i;
-
+  public Cromosoma (int size, Cromosoma a, myRand genpassed) {
+    generator = genpassed;
     cuerpo = new boolean[size];
-    for (i=0; i<cuerpo.length; i++)
+    for (int i=0; i<cuerpo.length; i++)
       cuerpo[i] = a.getGen(i);
     calidad = a.getCalidad();
-    cruzado = false;
+    evaluated = false;
     valido = true;
   }
 
   /*Cronstruct a cromosome from a bit array (OK)*/
-  public Cromosoma (boolean datos[]) {
-    int i;
-
+  public Cromosoma (boolean datos[], myRand genpassed) {
+    generator = genpassed;
     cuerpo = new boolean[datos.length];
-    for (i=0; i<datos.length; i++)
+    for (int i=0; i<datos.length; i++)
       cuerpo[i] = datos[i];
-    cruzado = true;
+    evaluated = false;
     valido = true;
   }
 
@@ -123,11 +121,11 @@ public class Cromosoma implements Comparable {
     //calidad = correctClassPerc*alfa;
     //calidad += ((1.0 - alfa) * 100.0 * (M - s) / M);
     calidad = correctClassPerc;
-    if (calidad>=acc_test){
-        calidad +=  100.0 * (TreeSize - numberOfNodes) / TreeSize;
-        calidad += (0.5 * 100.0 * (M - s) / M);
-    }
-    cruzado = false;
+    //if (calidad>=acc_test){
+    //    calidad +=  100.0 * (TreeSize - numberOfNodes) / TreeSize;
+    //    calidad += (0.5 * 100.0 * (M - s) / M);
+    //}
+    evaluated = true;
 }
 
   /*Function that does the mutation (OK)*/
@@ -139,12 +137,12 @@ public class Cromosoma implements Comparable {
       if (cuerpo[i]) {
         if (generator.getDouble() < pMutacion1to0) {
           cuerpo[i] = false;
-          cruzado = true;
+          evaluated = false;
         }
       } else {
         if (generator.getDouble() < pMutacion0to1) {
           cuerpo[i] = true;
-          cruzado = true;
+          evaluated = false;
         }
       }
     }
@@ -166,12 +164,12 @@ public class Cromosoma implements Comparable {
         cuerpo[i] = mejor.getGen(i);
       }
     }
-    cruzado = true;
+    evaluated = false;
   }
 
   /*OK*/
   public boolean estaEvaluado () {
-    return !cruzado;
+    return evaluated;
   }
 
   /*OK*/
@@ -198,9 +196,9 @@ public class Cromosoma implements Comparable {
   /*Function that lets compare cromosomes to sort easily (OK)*/
   public int compareTo (Object o1) {
     if (this.calidad > ((Cromosoma)o1).calidad)
-      return -1;
-    else if (this.calidad < ((Cromosoma)o1).calidad)
       return 1;
+    else if (this.calidad < ((Cromosoma)o1).calidad)
+      return -1;
     else return 0;
   }
 

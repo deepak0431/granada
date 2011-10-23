@@ -17,7 +17,7 @@ public class myRand{
         doublevect = new double[totEl];
         for (int i=0;i<totEl;i++){
             doublevect[i]=Math.random();
-            if (Math.round(doublevect[i])>0.5)
+            if (Math.round(doublevect[i])>=0.5)
                 boolvect[i]=true;
             else
                 boolvect[i]=false;    

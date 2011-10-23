@@ -12,9 +12,7 @@ package keel.Algorithms.Preprocess.Instance_Selection.CHC45_3;
 import keel.Algorithms.Preprocess.Basic.*;
 import keel.Algorithms.Preprocess.Basic.C45.*;
 import org.core.*;
-import java.util.StringTokenizer;
-import java.util.Arrays;
-import java.util.Vector;
+import java.util.*;
 
 public class CHC45_3 extends Metodo {
 
@@ -116,15 +114,15 @@ public class CHC45_3 extends Metodo {
     
     //poblation of cromosomes
     Cromosoma poblacion[];
-    int ev = 0;
+    int numLoop = 0;
     int pos, tmp;
-    Cromosoma newPob[];
-    int d = datosTrain.length / 4;
+    
+    int d = (int) Math.floor (datosTrain.length / 4);
     
     Cromosoma pobTemp[];
     long tiempo = System.currentTimeMillis();
     
-    generator = new myRand(1493);
+    generator = new myRand(74177);
 
     /*Getting the number of different classes*/
     nClases = 0;
@@ -137,7 +135,7 @@ public class CHC45_3 extends Metodo {
     boolean [] vectOnes=new boolean[datosTrain.length];
     for (i=0;i< datosTrain.length;i++)
         vectOnes[i]=true;       
-    Cromosoma complete=new Cromosoma(vectOnes);
+    Cromosoma complete=new Cromosoma(vectOnes,generator);
 
     int   TreeSize = complete.numberOfNodes;
     float acc_Test = complete.correctClassPerc;
@@ -150,7 +148,7 @@ public class CHC45_3 extends Metodo {
     
     poblacion[0]=complete;
     for (i=1; i<tamPoblacion; i++)
-      poblacion[i] = new Cromosoma (datosTrain.length);
+      poblacion[i] = new Cromosoma (datosTrain.length,generator);
 
     /*Initial evaluation of the poblation*/
     for (i=0; i<tamPoblacion; i++)
@@ -162,52 +160,38 @@ public class CHC45_3 extends Metodo {
     float bestPerformance=complete.correctClassPerc;
     
     /*Until stop condition*/
-    while (ev < nEval || notImproved > 150) {
+    while (numLoop < nEval || notImproved > 150) {
+    //while (numLoop < nEval ) {
     
       /*Structure recombination in C(t) constructing C'(t)*/
       Cromosoma Pob_child[] = recombinar (poblacion, d);
-      
-      newPob = new Cromosoma[poblacion.length];
-      
-      for (i=0, l=0; i<Pob_child.length; i++) {
-        if (Pob_child[i].esValido()) { //the cromosome must be copied to the new poblation C'(t)
-          newPob[l] = new Cromosoma (datosTrain.length, Pob_child[i]);
-          l++;
-        }
-      }
 
       /*Structure evaluation in C'(t)*/
-      for (i=0; i<newPob.length; i++) {
-        newPob[i].evalua(myC45, TrainModel,TreeSize,acc_Test, alfa, nClases);
-        //newPob[i].evalua(datosTrain, realTrain, nominalTrain, nulosTrain, clasesTrain, alfa, kNeigh, nClases, distanceEu);
-        ev++;        
+      for (i=0; i<Pob_child.length; i++) {
+        Pob_child[i].evalua(myC45, TrainModel,TreeSize,acc_Test, alfa, nClases);
+        //Pob_child[i].evalua(datosTrain, realTrain, nominalTrain, nulosTrain, clasesTrain, alfa, kNeigh, nClases, distanceEu);
+               
       }
 
       /*Selection(s) of P(t) from C'(t) and P(t-1)*/
-      Arrays.sort(poblacion);
-      Arrays.sort(newPob);
-      
-      
+      Arrays.sort(poblacion, Collections.reverseOrder());
+      Arrays.sort(Pob_child, Collections.reverseOrder());
+     
       /*If the better of C' is worse than the worst of P(t-1), then there will no changes*/
-      if (childNum==0 || newPob[0].getCalidad() < poblacion[tamPoblacion-1].getCalidad()) {
-        d--;
+      if (childNum==0) {
+        d-=(int) Math.floor (datosTrain.length / 40);
       } else {
         pobTemp = new Cromosoma[tamPoblacion];
-        for (i=0, j=0, k=0; i<tamPoblacion && k<childNum; i++) {
-          if (poblacion[j].getCalidad() > newPob[k].getCalidad()) {
-            pobTemp[i] = new Cromosoma (datosTrain.length, poblacion[j]);
+        for (i=0, j=0, k=0; i<tamPoblacion ; i++) {
+          if (poblacion[j].getCalidad() > Pob_child[k].getCalidad()) {
+            pobTemp[i] = poblacion[j];
             j++;
           } else {
-            pobTemp[i] = new Cromosoma (datosTrain.length, newPob[k]);
+            pobTemp[i] = Pob_child[k];
             k++;
           }
         }
-        if (k == childNum) { //there are cromosomes for copying
-          for (; i<tamPoblacion; i++) {
-            pobTemp[i] = new Cromosoma (datosTrain.length, poblacion[j]);
-            j++;
-          }
-        }
+        
         poblacion = pobTemp;
         
         if (poblacion[0].correctClassPerc > bestPerformance){
@@ -220,23 +204,31 @@ public class CHC45_3 extends Metodo {
       }
 
       /*Last step of the algorithm*/
+      //teoricamente dovrebbe essere già ordinato, siccome non funziona bene mi 
+      //tolgo il dubbio!
+      Arrays.sort(poblacion, Collections.reverseOrder());
+      
       if (d < 0) {
         for (i=1; i<tamPoblacion; i++) {
-          poblacion[i].divergeCHC (r, poblacion[0], prob0to1Div);
+          double probToSet1= generator.getDouble();
+          //poblacion[i].divergeCHC (r, poblacion[0], prob0to1Div);
+          poblacion[i].divergeCHC (r, poblacion[0], probToSet1);
         }
         for (i=0; i<tamPoblacion; i++)
           if (!(poblacion[i].estaEvaluado())) {
             poblacion[i].evalua(myC45, TrainModel,TreeSize, acc_Test, alfa, nClases);
             //poblacion[i].evalua(datosTrain, realTrain, nominalTrain, nulosTrain, clasesTrain, alfa, kNeigh, nClases, distanceEu);
-            ev++;
+            
           }
 
         /*Reinicialization of d value*/
-        d = (int)(r*(1.0-r)*(double)datosTrain.length);
+        //d = (int)(r*(1.0-r)*(double)datosTrain.length);
+        d = (int) Math.floor (datosTrain.length / 4);
       }
+      numLoop++;
     }
 
-    Arrays.sort(poblacion);
+    Arrays.sort(poblacion,Collections.reverseOrder());
     nSel = poblacion[0].genesActivos();
 
     /*Construction of S set from the best cromosome*/
@@ -270,7 +262,7 @@ public class CHC45_3 extends Metodo {
    * @parameter  C       The original poblation
    * @parameter  d       The distance threshold
    * 
-   * @return     newPob  The new poblacion (that have to compete with the oldest 
+   * @return     Pob_child  The new poblacion (that have to compete with the oldest 
    *                     one to survive)
    */
   private Cromosoma[] recombinar (Cromosoma C[], int d) {
@@ -278,12 +270,15 @@ public class CHC45_3 extends Metodo {
 
     int distHamming;
     int child = 0;
+    //creating the new vector of cromosomes
     Cromosoma [] Pob_child=new Cromosoma[C.length];
+    for (int i =0; i<C.length; i++)
+        Pob_child[i]=new Cromosoma(datosTrain.length, generator);
     
     for (int attempt=0; attempt< C.length*5 && child < C.length;attempt++){
         distHamming=0;
-        int indexFather=(int)Math.round(generator.getDouble()*C.length);
-        int indexMother=(int)Math.round(generator.getDouble()*C.length);
+        int indexFather=(int)Math.round(generator.getDouble()*(C.length-1));
+        int indexMother=(int)Math.round(generator.getDouble()*(C.length-1));
         //check if the distHamming is bigger than threshold d
         for (int j=0; j<datosTrain.length; j++){
             if (C[indexFather].getGen(j) != C[indexMother].getGen(j))
