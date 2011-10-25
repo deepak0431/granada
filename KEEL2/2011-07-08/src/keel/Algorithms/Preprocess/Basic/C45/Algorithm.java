@@ -43,22 +43,22 @@ import keel.Dataset.Attributes;
 
 public abstract class Algorithm {
     /** The name of the file that contains the information to build the model. */
-    protected static String modelFileName = "";
+    protected String modelFileName = "";
 
     /** The name of the file that contains the information to make the training. */
-    protected static String trainFileName = "";
+    protected String trainFileName = "";
 
     /** The name of the file that contains the information to make the test. */
-    protected static String testFileName = "";
+    protected String testFileName = "";
 
     /** The name of the train output file. */
-    protected static String trainOutputFileName;
+    protected String trainOutputFileName;
 
     /** The name of the test output file. */
-    protected static String testOutputFileName;
+    protected String testOutputFileName;
 
     /** The name of the result file. */
-    protected static String resultFileName;
+    protected String resultFileName;
 
     /** Correctly classified itemsets. */
     protected int correct = 0;
@@ -76,7 +76,7 @@ public abstract class Algorithm {
     protected Dataset testDataset;
 
     /** The log file. */
-    protected static BufferedWriter log;
+    protected BufferedWriter log;
 
     /** The instant of starting the algorithm. */
     protected long startTime = System.currentTimeMillis();

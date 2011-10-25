@@ -712,7 +712,7 @@ public class Cut {
      *
      * @return						The value with the given number of decimals.
      */
-    public static String doubleToString(double value, int afterDecimalPoint) {
+    public String doubleToString(double value, int afterDecimalPoint) {
         StringBuffer stringBuffer;
         double temp;
         int i, dotPosition;
@@ -775,7 +775,7 @@ public class Cut {
      *
      * @return						The value with the given number of decimals.
      */
-    public static String doubleToString(double value, int width,
+    public String doubleToString(double value, int width,
                                         int afterDecimalPoint) {
         String tempString = doubleToString(value, afterDecimalPoint);
         char[] result;

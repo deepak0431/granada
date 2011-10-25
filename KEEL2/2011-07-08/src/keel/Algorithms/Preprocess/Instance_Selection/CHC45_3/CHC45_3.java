@@ -33,6 +33,7 @@ public class CHC45_3 extends Metodo {
   protected float confidence;
   protected int instancesPerLeaf;
   C45 myC45;
+  Vector confArray;
   
   //my pseudo-random circular generator
   myRand generator;
@@ -74,7 +75,9 @@ public class CHC45_3 extends Metodo {
     distanceEu=false;
     
     /* Making datas for the C4.5 Algorithm */
-    TrainModel = new Dataset(training);
+    //TrainModel = new Dataset(training);
+    //ponendo true per qualche strano movivo: NON FUNZIONA!!!
+    TrainModel = new Dataset(ficheroTraining,false);
     
     //System.out.println("prima di creare il dataset test");
     TestModel = new Dataset(test);
@@ -89,7 +92,7 @@ public class CHC45_3 extends Metodo {
     confArray[3]=confidence;
     confArray[4]=instancesPerLeaf;
     */
-    Vector confArray = new Vector();
+    confArray = new Vector();
     
     confArray.add(TrainModel);
     confArray.add(TestModel);
@@ -114,7 +117,7 @@ public class CHC45_3 extends Metodo {
     
     //poblation of cromosomes
     Cromosoma poblacion[];
-    int numLoop = 0;
+    int ev = 0;
     int pos, tmp;
     
     int d = (int) Math.floor (datosTrain.length / 4);
@@ -136,6 +139,7 @@ public class CHC45_3 extends Metodo {
     for (i=0;i< datosTrain.length;i++)
         vectOnes[i]=true;       
     Cromosoma complete=new Cromosoma(vectOnes,generator);
+    complete.evaluaComplete(myC45, TrainModel, alfa, nClases);
 
     int   TreeSize = complete.numberOfNodes;
     float acc_Test = complete.correctClassPerc;
@@ -156,11 +160,11 @@ public class CHC45_3 extends Metodo {
       //poblacion[i].evalua(datosTrain, realTrain, nominalTrain, nulosTrain, clasesTrain, alfa, kNeigh, nClases, distanceEu);
 
     //variable used to count the times that the algorithm doesn't improve his performance.
-    int notImproved= 0-850;
+    //int notImproved= 0-500;
     float bestPerformance=complete.correctClassPerc;
     
     /*Until stop condition*/
-    while (numLoop < nEval || notImproved > 150) {
+    while (ev < nEval ) {
     //while (numLoop < nEval ) {
     
       /*Structure recombination in C(t) constructing C'(t)*/
@@ -168,9 +172,11 @@ public class CHC45_3 extends Metodo {
 
       /*Structure evaluation in C'(t)*/
       for (i=0; i<Pob_child.length; i++) {
-        Pob_child[i].evalua(myC45, TrainModel,TreeSize,acc_Test, alfa, nClases);
-        //Pob_child[i].evalua(datosTrain, realTrain, nominalTrain, nulosTrain, clasesTrain, alfa, kNeigh, nClases, distanceEu);
-               
+        if (!(poblacion[i].estaEvaluado())) {
+           Pob_child[i].evalua(myC45, TrainModel,TreeSize,acc_Test, alfa, nClases);
+           //Pob_child[i].evalua(datosTrain, realTrain, nominalTrain, nulosTrain, clasesTrain, alfa, kNeigh, nClases, distanceEu);
+           ev++;
+           }    
       }
 
       /*Selection(s) of P(t) from C'(t) and P(t-1)*/
@@ -196,9 +202,9 @@ public class CHC45_3 extends Metodo {
         
         if (poblacion[0].correctClassPerc > bestPerformance){
             bestPerformance=poblacion[0].correctClassPerc;
-            notImproved=0;
+            //notImproved=0;
         }else{
-            notImproved++;
+            //notImproved++;
         }
         
       }
@@ -212,20 +218,21 @@ public class CHC45_3 extends Metodo {
         for (i=1; i<tamPoblacion; i++) {
           double probToSet1= generator.getDouble();
           //poblacion[i].divergeCHC (r, poblacion[0], prob0to1Div);
-          poblacion[i].divergeCHC (r, poblacion[0], probToSet1);
+          double probChangeBits=generator.getDouble();
+          poblacion[i].divergeCHC (probChangeBits, poblacion[0], probToSet1);
         }
         for (i=0; i<tamPoblacion; i++)
           if (!(poblacion[i].estaEvaluado())) {
-            poblacion[i].evalua(myC45, TrainModel,TreeSize, acc_Test, alfa, nClases);
+            poblacion[i].evalua(myC45, TrainModel,TreeSize,acc_Test, alfa, nClases);
             //poblacion[i].evalua(datosTrain, realTrain, nominalTrain, nulosTrain, clasesTrain, alfa, kNeigh, nClases, distanceEu);
-            
+            ev++;
           }
 
         /*Reinicialization of d value*/
         //d = (int)(r*(1.0-r)*(double)datosTrain.length);
         d = (int) Math.floor (datosTrain.length / 4);
       }
-      numLoop++;
+      //numLoop++;
     }
 
     Arrays.sort(poblacion,Collections.reverseOrder());
@@ -297,7 +304,8 @@ public class CHC45_3 extends Metodo {
     }
     
     /* If the algorithm end without C.lenght childs we'll add the old best 
-     * cromosomes to the new poblation.
+     * cromosomes to the new poblation (is only a pointer passed then it will 
+     * not be evaluated again)
      */
     childNum = child;
     if (child<C.length){

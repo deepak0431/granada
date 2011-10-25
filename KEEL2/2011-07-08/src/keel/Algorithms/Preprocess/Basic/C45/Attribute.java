@@ -44,10 +44,10 @@ import java.util.*;
  */
 public class Attribute {
     /** Continuous attribute. */
-    public final static int CONTINUOUS = 0;
+    public final int CONTINUOUS = 0;
 
     /** Discret attribute. */
-    public final static int DISCRET = 1;
+    public final int DISCRET = 1;
 
     /** The name.*/
     private String name;

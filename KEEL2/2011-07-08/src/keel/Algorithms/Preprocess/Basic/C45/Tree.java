@@ -347,6 +347,19 @@ public class Tree {
             text.append(aux + "}\n");
         }
     }
+    public void calculateNodes(){
+           
+        if (!isLeaf){
+            for (int i = 0; i < sons.length; i++) {
+                if (sons[i].isLeaf) {
+                    NumberOfLeafs++;
+                } else {
+                    NumberOfNodes++;
+                    sons[i].calculateNodes();
+                }
+            }
+        }
+    }
 
    /**
    * Function to compute the number of attributes of the tree.
@@ -512,7 +525,7 @@ public class Tree {
      *
      * @return		The errors.
      */
-    private static double errors(double N, double e, float CF) {
+    private double errors(double N, double e, float CF) {
         // Some constants for the interpolation.
         double Val[] = {0, 0.000000001, 0.00000001, 0.0000001, 0.000001,
                 0.00001, 0.00005, 0.0001,

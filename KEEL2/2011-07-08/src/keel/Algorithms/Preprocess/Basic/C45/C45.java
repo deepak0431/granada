@@ -72,7 +72,7 @@ public class C45 extends Algorithm {
     private double[] priorsProbabilities;
 
     /** Resolution of the margin histogram. */
-    private static int marginResolution = 500;
+    private int marginResolution = 500;
 
     /** Cumulative margin classification. */
     private double marginCounts[];
@@ -128,6 +128,7 @@ public class C45 extends Algorithm {
     public C45(Vector confArray) {
         modelDataset = (Dataset) confArray.get(0);
         //trainDataset = (Dataset) confArray[1];
+        trainDataset = (Dataset) confArray.get(0);
         testDataset = (Dataset) confArray.get(1);
         prune = (Boolean) confArray.get(2);
         confidence = (Float) confArray.get(3);
@@ -309,6 +310,12 @@ public class C45 extends Algorithm {
         selectCut = new SelectCut(minItemsets, itemsets);
         root = new Tree(selectCut, prune, confidence);
         root.buildTree(itemsets);
+
+        /* Successivamente venivano svolte altre operazioni:
+         * printTrain
+         * printTest
+         * printResult
+         */
     }
 
     /** Function to evaluate the class which the itemset must have according to the classification of the tree.
@@ -423,7 +430,7 @@ public class C45 extends Algorithm {
      * @param doubles		The array of elements.
      *
      */
-    public static int maxIndex(double[] doubles) {
+    public int maxIndex(double[] doubles) {
         double maximum = 0;
         int maxIndex = 0;
 
@@ -456,6 +463,33 @@ public class C45 extends Algorithm {
                             getClassValue()] += modelDataset.itemset(i).
                             getWeight();
                     classPriorsSum += modelDataset.itemset(i).getWeight();
+                } catch (Exception e) {
+                    System.err.println(e.getMessage());
+                }
+            }
+        }
+    }
+    
+    
+    
+    /** Sets the class prior probabilities(modified to be call from cromosoma).
+     *
+     * @throws Exception	If cannot compute the probabilities.
+     */
+    public void priorsProbabilities(Dataset myDataset) throws Exception {
+        for (int i = 0; i < myDataset.numClasses(); i++) {
+            priorsProbabilities[i] = 1;
+        }
+
+        classPriorsSum = myDataset.numClasses();
+
+        for (int i = 0; i < myDataset.numItemsets(); i++) {
+            if (!myDataset.itemset(i).classIsMissing()) {
+                try {
+                    priorsProbabilities[(int) myDataset.itemset(i).
+                            getClassValue()] += myDataset.itemset(i).
+                            getWeight();
+                    classPriorsSum += myDataset.itemset(i).getWeight();
                 } catch (Exception e) {
                     System.err.println(e.getMessage());
                 }
@@ -550,6 +584,30 @@ public class C45 extends Algorithm {
                                e.getMessage());
         }
     }
+    
+    /** Evaluates the training dataset and writes the results in the file.
+     *
+     * @exception 	If the file cannot be written.
+     */
+    public void evaluateTrain() {
+        //String text = getHeader();
+
+        for (int i = 0; i < trainDataset.numItemsets(); i++) {
+            try {
+                Itemset itemset = trainDataset.itemset(i);
+                int cl = (int) evaluateItemset(itemset);
+
+                if (cl == (int) itemset.getValue(trainDataset.getClassIndex())) {
+                    correct++;
+                }
+
+                
+            } catch (Exception e) {
+                System.err.println(e.getMessage());
+            }
+        }
+
+    }
 
     /** Evaluates the test dataset and writes the results in the file.
      *
@@ -558,7 +616,7 @@ public class C45 extends Algorithm {
      * @exception 	If the evaluateItemsets doesn't work.
      */
     public float evaluateCromosoma() {
-
+        testCorrect=0;
         for (int i = 0; i < testDataset.numItemsets(); i++) {
             try {
                 int cl = (int) evaluateItemset(testDataset.itemset(i));
@@ -575,6 +633,7 @@ public class C45 extends Algorithm {
         // variabile testCorrect
         float PercCorrectClassified = (float) (testCorrect * 100.0) / 
                 (float) testDataset.numItemsets();
+        //return (float) testCorrect;
         return PercCorrectClassified;
     }
 
@@ -584,7 +643,7 @@ public class C45 extends Algorithm {
      */
     public void printTest() {
         String text = getHeader();
-
+        testCorrect=0;
         for (int i = 0; i < testDataset.numItemsets(); i++) {
             try {
                 int cl = (int) evaluateItemset(testDataset.itemset(i));

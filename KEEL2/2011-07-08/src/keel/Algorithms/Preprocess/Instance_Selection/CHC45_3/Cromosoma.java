@@ -11,10 +11,8 @@ package keel.Algorithms.Preprocess.Instance_Selection.CHC45_3;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import keel.Algorithms.Preprocess.Basic.*;
 import keel.Algorithms.Preprocess.Basic.C45.*;
-
-import org.core.*;
+import java.util.*;
 
 public class Cromosoma implements Comparable {
 
@@ -109,22 +107,62 @@ public class Cromosoma implements Comparable {
     double M = (double)modelDataset.numItemsets();
     double s = (double)genesActivos();
     Dataset selectedModel = modelDataset.selectDataset(cuerpo,(int)s);
+    
         try {
+            myTree.priorsProbabilities(selectedModel);
             myTree.generateTree(selectedModel);
         } catch (Exception ex) {
             Logger.getLogger(Cromosoma.class.getName()).log(Level.SEVERE, null, ex);
         }
     correctClassPerc = myTree.evaluateCromosoma(); 
-    numberOfNodes = myTree.root.NumberOfNodes;
+    Tree.NumberOfNodes++;
+    myTree.root.calculateNodes();
+    numberOfNodes = Tree.NumberOfNodes;
+    
+    calidad = correctClassPerc;
+    if (calidad>= acc_test){
+        calidad +=  100.0 * (TreeSize - numberOfNodes) / TreeSize;
+    }
+    
     //qui lui ha i dati correttamente classificati...(aciertos)
 
     //calidad = correctClassPerc*alfa;
     //calidad += ((1.0 - alfa) * 100.0 * (M - s) / M);
+    
+//    if (calidad<0.9){
+//        if (calidad> 1.02 * acc_test){
+//            calidad +=  100.0 * (TreeSize - numberOfNodes) / TreeSize;
+//            calidad += (0.5 * 100.0 * (M - s) / M);
+//        }
+//    }else{
+//        if (calidad>= acc_test){
+//            calidad +=  100.0 * (TreeSize - numberOfNodes) / TreeSize;
+//            calidad += (0.5 * 100.0 * (M - s) / M);
+//        }
+//    }
+    
+    evaluated = true;
+}
+  
+  public void evaluaComplete (C45 myTree, Dataset modelDataset,double alfa, int nClases) {
+    //M = (double)datos.length;
+    double M = (double)modelDataset.numItemsets();
+    double s = (double)genesActivos();
+    Dataset selectedModel = modelDataset.selectDataset(cuerpo,(int)s);
+    
+        try {
+            myTree.priorsProbabilities(selectedModel);
+            myTree.generateTree(selectedModel);
+        } catch (Exception ex) {
+            Logger.getLogger(Cromosoma.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    correctClassPerc = myTree.evaluateCromosoma(); 
+    Tree.NumberOfNodes++;
+    myTree.root.calculateNodes();
+    numberOfNodes = Tree.NumberOfNodes;
+    
     calidad = correctClassPerc;
-    //if (calidad>=acc_test){
-    //    calidad +=  100.0 * (TreeSize - numberOfNodes) / TreeSize;
-    //    calidad += (0.5 * 100.0 * (M - s) / M);
-    //}
+
     evaluated = true;
 }
 
