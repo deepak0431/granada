@@ -7,13 +7,14 @@
 //  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
 //
 
-package keel.Algorithms.Preprocess.Instance_Selection.CHC45_Verbose;
+package keel.Algorithms.Preprocess.Instance_Selection.CHC_I_P;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import keel.Algorithms.Preprocess.Basic.*;
 import keel.Algorithms.Preprocess.Basic.C45.*;
-import java.util.*;
 
+import org.core.*;
 
 public class Cromosoma implements Comparable {
 
@@ -25,50 +26,56 @@ public class Cromosoma implements Comparable {
 
   /*Useless data for cromosomes*/
   double calidad;
-  boolean evaluated;
+  public boolean cruzado;
   boolean valido;
   double errorRate;
   
   /* percentual of Correct Classified */
-  float correctClassPerc;
+  public float correctClassPerc;
   /* number of nodes of the C45's associated Tree */
   public int numberOfNodes;
-  
-  //my pseudo-random circular generator
-  myRand generator;
 
   /* Construct a random cromosome of specified size(OK) */
-  public Cromosoma (int size,myRand genpassed) {
+  public Cromosoma (int size) {
 
     double u;
     int i;
-    generator = genpassed;
-    
+
     cuerpo = new boolean[size];
     for (i=0; i<size; i++) {
-      cuerpo[i]=generator.getBool();
+      u = Randomize.Rand();
+      if (u < 0.5) {
+        cuerpo[i] = false;
+      } else {
+        cuerpo[i] = true;
+      }
     }
-    evaluated = false;
+    cruzado = true;
     valido = true;
   }
 
   /*Create a copied cromosome (OK)*/
-  public Cromosoma (int size, Cromosoma a, myRand genpassed) {
-    generator = genpassed;
+  public Cromosoma (int size, Cromosoma a) {
+    int i;
+
     cuerpo = new boolean[size];
-    for (int i=0; i<cuerpo.length; i++)
+    for (i=0; i<cuerpo.length; i++)
       cuerpo[i] = a.getGen(i);
     calidad = a.getCalidad();
-    evaluated = false;
+    numberOfNodes=a.numberOfNodes;
+    correctClassPerc=a.correctClassPerc;
+    cruzado = false;
     valido = true;
   }
 
   /*Cronstruct a cromosome from a bit array (OK)*/
-  public Cromosoma (boolean datos[], myRand genpassed) {
-    generator = genpassed;
+  public Cromosoma (boolean datos[]) {
+    int i;
+
     cuerpo = new boolean[datos.length];
-    System.arraycopy(datos, 0, cuerpo, 0, datos.length);
-    evaluated = false;
+    for (i=0; i<datos.length; i++)
+      cuerpo[i] = datos[i];
+    cruzado = true;
     valido = true;
   }
 
@@ -102,7 +109,7 @@ public class Cromosoma implements Comparable {
    *                    classification and reduction importance.
    * @param nClases     number of classes.
    */
-  public void evalua (C45 myTree, Dataset modelDataset,int TreeSize,float acc_Ref, double alfa, int nClases) {
+  public void evalua (C45 myTree, Dataset modelDataset,int TreeSize, double alfa) {
     //M = (double)datos.length;
     //double M = (double)modelDataset.numItemsets();
     double s = (double)genesActivos();
@@ -120,27 +127,17 @@ public class Cromosoma implements Comparable {
     myTree.root.calculateNodes();
     //System.out.println(treeString);
     numberOfNodes = Tree.NumberOfNodes;
-    //qui lui ha i dati correttamente classificati...(aciertos)
 
     //calidad = correctClassPerc*alfa;
     //calidad += ((1.0 - alfa) * 100.0 * (M - s) / M);
-    calidad = correctClassPerc;
-    
-    /* The following part of the evaluation function may be usefull to control
-     * the overtraining limitating the tree dimension.
-     * (TreeSize - numberOfNodes) is a negative value if the tree's dimension 
-     * increase.
-     */
-    if (calidad>=acc_Ref){
-        calidad +=  3*(correctClassPerc-acc_Ref) + 100 * (TreeSize - numberOfNodes) / TreeSize;
-        //calidad += (0.5 * 100.0 * (M - s) / M);
-    }
-    evaluated = true;
+    calidad = correctClassPerc*alfa;
+    calidad += ((1.0 - alfa) * 100.0 * (TreeSize - numberOfNodes) / TreeSize);
+    cruzado = false;
 }
   
-    public void evaluaComplete (C45 myTree, Dataset modelDataset,double alfa, int nClases) {
+   public void evaluaComplete (C45 myTree, Dataset modelDataset,double alfa) {
     //M = (double)datos.length;
-    double M = (double)modelDataset.numItemsets();
+    //double M = (double)modelDataset.numItemsets();
     double s = (double)genesActivos();
     Dataset selectedModel = modelDataset.selectDataset(cuerpo,(int)s);
     
@@ -155,9 +152,10 @@ public class Cromosoma implements Comparable {
     myTree.root.calculateNodes();
     numberOfNodes = Tree.NumberOfNodes;
     
-    calidad = correctClassPerc;
+    // the tree size reduction is zero. 
+    calidad = correctClassPerc*alfa;
 
-    evaluated = true;
+    cruzado = false;
 }
 
   /*Function that does the mutation (OK)*/
@@ -167,14 +165,14 @@ public class Cromosoma implements Comparable {
 
     for (i=0; i<cuerpo.length; i++) {
       if (cuerpo[i]) {
-        if (generator.getDouble() < pMutacion1to0) {
+        if (Randomize.Rand() < pMutacion1to0) {
           cuerpo[i] = false;
-          evaluated = false;
+          cruzado = true;
         }
       } else {
-        if (generator.getDouble() < pMutacion0to1) {
+        if (Randomize.Rand() < pMutacion0to1) {
           cuerpo[i] = true;
-          evaluated = false;
+          cruzado = true;
         }
       }
     }
@@ -186,8 +184,8 @@ public class Cromosoma implements Comparable {
     int i;
 
     for (i=0; i<cuerpo.length; i++) {
-      if (generator.getDouble() < r) {
-        if (generator.getDouble() < prob) {
+      if (Randomize.Rand() < r) {
+        if (Randomize.Rand() < prob) {
           cuerpo[i] = true;
         } else {
           cuerpo[i] = false;
@@ -196,12 +194,12 @@ public class Cromosoma implements Comparable {
         cuerpo[i] = mejor.getGen(i);
       }
     }
-    evaluated = false;
+    cruzado = true;
   }
 
   /*OK*/
   public boolean estaEvaluado () {
-    return evaluated;
+    return !cruzado;
   }
 
   /*OK*/

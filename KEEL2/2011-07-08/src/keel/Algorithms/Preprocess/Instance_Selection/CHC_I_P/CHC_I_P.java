@@ -7,14 +7,16 @@
 //  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
 //
 
-package keel.Algorithms.Preprocess.Instance_Selection.CHC45_Verbose;
+package keel.Algorithms.Preprocess.Instance_Selection.CHC_I_P;
 
 import keel.Algorithms.Preprocess.Basic.*;
 import keel.Algorithms.Preprocess.Basic.C45.*;
 import org.core.*;
-import java.util.*;
+import java.util.StringTokenizer;
+import java.util.Arrays;
+import java.util.Vector;
 
-public class CHC45_Verbose extends Metodo {
+public class CHC_I_P extends Metodo {
 
   /*Own parameters of the algorithm*/
   private long semilla;
@@ -34,12 +36,6 @@ public class CHC45_Verbose extends Metodo {
   protected int instancesPerLeaf;
   C45 myC45;
   Vector confArray;
-  
-  //my pseudo-random circular generator
-  myRand generator;
-  
-  //number of child
-  int childNum;
   
   /**
    * Richiede il file di configurazione, tale file verr√† letto 
@@ -66,15 +62,13 @@ public class CHC45_Verbose extends Metodo {
    * L'inizializzazione delle variabili viene fatta, invece, servendosi delle 
    * funzioni della classe metodo.
    */
-  public CHC45_Verbose (String ficheroScript) {
+  public CHC_I_P (String ficheroScript) {
     // distanceEu=false;
     // Default initialization is false for the boolean variables (e comunque sta 
     // cosa sarebbe bene che la sistemassi meglio)
     super (ficheroScript);
     
     distanceEu=false;
-    
-    generator = new myRand(74177);
     
     /* Making datas for the C4.5 Algorithm */
     //ponendo true per qualche strano movivo: NON FUNZIONA!!!
@@ -102,113 +96,117 @@ public class CHC45_Verbose extends Metodo {
     confArray.add(confidence);
     confArray.add(instancesPerLeaf);
     myC45 = new C45(confArray);
-    
-    
   }
 
   public void ejecutar () {
     //variabili di appoggio	  
     int i, j, k, l;
-    int nClases;
+    int numLoop = 0;
     double conjS[][];
     double conjR[][];
     int conjN[][];
     boolean conjM[][];
     int clasesS[];
     int nSel = 0;
-    
-    //poblation of cromosomes
     Cromosoma poblacion[];
-    int numLoop = 0;
+    int ev = 0;
+    Cromosoma C[];
+    int baraje[];
     int pos, tmp;
-    
-    int d = (int) Math.floor (datosTrain.length / 4);
-    
+    Cromosoma newPob[];
+    int d = datosTrain.length / 4;
+    int tamC;
     Cromosoma pobTemp[];
     long tiempo = System.currentTimeMillis();
-    
-    
 
-    /*Getting the number of different classes*/
-    nClases = 0;
-    for (i=0; i<clasesTrain.length; i++)
-      if (clasesTrain[i] > nClases)
-        nClases = clasesTrain[i];
-    nClases++;
 
     //finding the dimension of the complete Tree
     boolean [] vectOnes=new boolean[datosTrain.length];
     for (i=0;i< datosTrain.length;i++)
         vectOnes[i]=true;       
-    Cromosoma complete=new Cromosoma(vectOnes,generator);
-    complete.evaluaComplete(myC45, TrainModel, alfa, nClases);
+    Cromosoma complete=new Cromosoma(vectOnes);
+    complete.evaluaComplete(myC45, TrainModel, alfa);
 
     int   TreeSize = complete.numberOfNodes;
     float acc_Ref = complete.correctClassPerc;
     
-    /* Random initialization of the poblation
-     * The first element is the complete cromosome, in order to start with an 
-     * element that has a good classification's accuracy.
-     */
+    /*Random inicialization of the poblation*/
+    Randomize.setSeed (semilla);
     poblacion = new Cromosoma[tamPoblacion];
+    baraje = new int[tamPoblacion];
+    for (i=0; i<tamPoblacion; i++)
+      poblacion[i] = new Cromosoma (datosTrain.length);
     
-    poblacion[0]=complete;
-    
-    for (i=1; i<tamPoblacion; i++)
-      poblacion[i] = new Cromosoma (datosTrain.length,generator);
-
+    double bestPerformance=0;
     /*Initial evaluation of the poblation*/
-    for (i=1; i<tamPoblacion; i++){ 
-      poblacion[i].evalua(myC45, TrainModel,TreeSize,acc_Ref, alfa, nClases);
-      //poblacion[i].evalua(datosTrain, realTrain, nominalTrain, nulosTrain, clasesTrain, alfa, kNeigh, nClases, distanceEu);
+    for (i=0; i<tamPoblacion; i++){
+      poblacion[i].evalua(myC45, TrainModel,TreeSize, alfa);
+//      System.out.println("valutando poblation di i");
+//      System.out.println("la percentuale di elementi correttamente classificati Ë:");
+//      System.out.println(poblacion[i].correctClassPerc);
+//      System.out.println("la calidad Ë:");
+//      System.out.println(poblacion[i].calidad);
+//      System.out.println("il numero di nodi Ë:");
+//      System.out.println(poblacion[i].numberOfNodes);
+      
     }
-     
+      
+      //poblacion[i].evalua(datosTrain, realTrain, nominalTrain, nulosTrain, clasesTrain, alfa, kNeigh, nClases, distanceEu);
 
-    //variable used to count the times that the algorithm doesn't improve his performance.
-    int notImproved= -350;
-    int numOfDivergences = 0;
-    double bestPerformance=complete.calidad;
-    int numGeneration=0;
-    boolean stopLoop=false;
-    
-    
-    /******************* BEGINNING OF THE LOOP ***************************/ 
     /*Until stop condition*/
-    //while (numLoop < nEval && notImproved < 250) {
-    //while (numLoop < nEval && !stopLoop) {
-    while (numLoop < nEval ) {
-    
+    while (ev < nEval) {
+      C = new Cromosoma[tamPoblacion];
+
+      /*Selection(r) of C(t) from P(t)*/
+      for (i=0; i<tamPoblacion; i++)
+        baraje[i] = i;
+      for (i=0; i<tamPoblacion; i++) {
+        pos = Randomize.Randint (i, tamPoblacion-1);
+        tmp = baraje[i];
+        baraje[i] = baraje[pos];
+        baraje[pos] = tmp;
+      }
+      for (i=0; i<tamPoblacion; i++)
+        C[i] = new Cromosoma (datosTrain.length, poblacion[baraje[i]]);
+
       /*Structure recombination in C(t) constructing C'(t)*/
-      Cromosoma Pob_child[] = recombinar (poblacion, d);
+      tamC = recombinar (C, d);
+      newPob = new Cromosoma[tamC];
+      for (i=0, l=0; i<C.length; i++) {
+        if (C[i].esValido()) { //the cromosome must be copied to the new poblation C'(t)
+          newPob[l] = new Cromosoma (datosTrain.length, C[i]);
+          l++;
+        }
+      }
 
       /*Structure evaluation in C'(t)*/
-      for (i=0; i<Pob_child.length; i++) {
-          if (!(Pob_child[i].estaEvaluado())) {
-            Pob_child[i].evalua(myC45, TrainModel,TreeSize, acc_Ref, alfa, nClases);
-            //poblacion[i].evalua(datosTrain, realTrain, nominalTrain, nulosTrain, clasesTrain, alfa, kNeigh, nClases, distanceEu);
-            //System.out.println("evaluating child number: "+i);
-          }       
+      for (i=0; i<newPob.length; i++) {
+        newPob[i].evalua(myC45, TrainModel,TreeSize, alfa);
+        //newPob[i].evalua(datosTrain, realTrain, nominalTrain, nulosTrain, clasesTrain, alfa, kNeigh, nClases, distanceEu);
+        ev++;        
       }
+
       /*Selection(s) of P(t) from C'(t) and P(t-1)*/
       Arrays.sort(poblacion);
-      Arrays.sort(Pob_child);
-     
+      Arrays.sort(newPob);
       /*If the better of C' is worse than the worst of P(t-1), then there will no changes*/
-      //System.out.println("Il numero di figli Ë: "+childNum);
-      numGeneration++;
-      if (childNum<6 || (numGeneration>50 && notImproved>500)) {
-        d-=(int) Math.floor (datosTrain.length / 40);
-        System.out.println("La soglia vale: "+d);
-        numGeneration=0;
+      if (tamC==0 || newPob[0].getCalidad() < poblacion[tamPoblacion-1].getCalidad()) {
+        d--;
       } else {
         pobTemp = new Cromosoma[tamPoblacion];
-        for (i=0, j=0, k=0; i<tamPoblacion ; i++) {
-          if (poblacion[j].getCalidad() >= Pob_child[k].getCalidad()) {
-            pobTemp[i] = poblacion[j];
+        for (i=0, j=0, k=0; i<tamPoblacion && k<tamC; i++) {
+          if (poblacion[j].getCalidad() > newPob[k].getCalidad()) {
+            pobTemp[i] = new Cromosoma (datosTrain.length, poblacion[j]);
             j++;
           } else {
-            pobTemp[i] = Pob_child[k];
+            pobTemp[i] = new Cromosoma (datosTrain.length, newPob[k]);
             k++;
+          }
+        }
+        if (k == tamC) { //there are cromosomes for copying
+          for (; i<tamPoblacion; i++) {
+            pobTemp[i] = new Cromosoma (datosTrain.length, poblacion[j]);
+            j++;
           }
         }
         poblacion = pobTemp;
@@ -221,62 +219,52 @@ public class CHC45_Verbose extends Metodo {
           System.out.println("Vecchio valore valore di bestPerformance: "+bestPerformance);
           System.out.println("Valore di complete: "+complete.calidad);
           bestPerformance=poblacion[0].calidad;
-          notImproved=0;
-//          if ((bestPerformance-complete.calidad)>15)
-//              stopLoop=true;
+          
       }else{
-          notImproved++;
+          
           //System.out.println("popolazione non migliorata : "+notImproved);  
       }
 
       /*Last step of the algorithm*/
-      //teoricamente dovrebbe essere gi‡ ordinato, siccome non funziona bene mi 
-      //tolgo il dubbio!
-      //Arrays.sort(poblacion);
-      
       if (d < 0) {
-        numOfDivergences++;
-        if (notImproved>200)
-            notImproved=200;
-        System.out.println("divergenza numero: "+numOfDivergences);
         for (i=1; i<tamPoblacion; i++) {
-          double probToSet1= generator.getDouble();
-          //poblacion[i].divergeCHC (r, poblacion[0], prob0to1Div);
-          double probChangeBits=Math.pow(generator.getDouble(), (1+numOfDivergences*0.5));
-          poblacion[i].divergeCHC (probChangeBits, poblacion[0], probToSet1);
+          poblacion[i].divergeCHC (r, poblacion[0], prob0to1Div);
         }
         for (i=0; i<tamPoblacion; i++)
           if (!(poblacion[i].estaEvaluado())) {
-            poblacion[i].evalua(myC45, TrainModel,TreeSize, acc_Ref, alfa, nClases);
+            poblacion[i].evalua(myC45, TrainModel,TreeSize, alfa);
             //poblacion[i].evalua(datosTrain, realTrain, nominalTrain, nulosTrain, clasesTrain, alfa, kNeigh, nClases, distanceEu);
+            ev++;
           }
+
         /*Reinicialization of d value*/
-        //d = (int)(r*(1.0-r)*(double)datosTrain.length);
-        d = (int) Math.floor (datosTrain.length / 4);
+        d = (int)(r*(1.0-r)*(double)datosTrain.length);
       }
       numLoop++;
-      //System.out.println("Loop nuumero : "+numLoop);
     }
 
     Arrays.sort(poblacion);
     nSel = poblacion[0].genesActivos();
-
-//    System.out.println("Il cromosoma selezionato Ë");
-//    for (i=0;i<poblacion[0].cuerpo.length;i++){
-//        System.out.print(poblacion[0].cuerpo[i]+" ");   
-//    }
-//    System.out.println(" ");
+    
+    System.out.println("Il cromosoma selezionato Ë");
+    for (i=0;i<poblacion[0].cuerpo.length;i++){
+        System.out.print(poblacion[0].cuerpo[i]+" ");   
+    }
+    System.out.println(" ");
     
     System.out.println("la percentuale di elementi correttamente classificati Ë:");
     System.out.println(poblacion[0].correctClassPerc);
+    System.out.println("la calidad Ë:");
+    System.out.println(poblacion[0].correctClassPerc);
     
     System.out.println("la percentuale di elementi correttamente classificati di complete Ë:");
-    System.out.println(complete.calidad);
     System.out.println(complete.correctClassPerc);
+    System.out.println("la calidad di complete Ë:");
+    System.out.println(complete.calidad);
     
     System.out.println("il numero di nodi dell'albero di decisione Ë:");
     System.out.println(poblacion[0].numberOfNodes);
-    
+
     /*Construction of S set from the best cromosome*/
     conjS = new double[nSel][datosTrain[0].length];
     conjR = new double[nSel][datosTrain[0].length];
@@ -296,77 +284,42 @@ public class CHC45_Verbose extends Metodo {
       }
     }
 
-    System.out.println("CHC45_Verbose "+ relation + " " + (double)(System.currentTimeMillis()-tiempo)/1000.0 + "s");
+    System.out.println("CHC_I_P "+ relation + " " + (double)(System.currentTimeMillis()-tiempo)/1000.0 + "s");
 
     OutputIS.escribeSalida(ficheroSalida[0], conjR, conjN, conjM, clasesS, entradas, salida, nEntradas, relation);
     OutputIS.escribeSalida(ficheroSalida[1], test, entradas, salida, nEntradas, relation);
   }
 
-  /* Function that creates the new geenration of cromosomes with the childs, and 
-   * some of the bests father if not enough childs are available
-   * 
-   * @parameter  C       The original poblation
-   * @parameter  d       The distance threshold
-   * 
-   * @return     Pob_child  The new poblacion (that have to compete with the oldest 
-   *                     one to survive)
-   */
-  private Cromosoma[] recombinar (Cromosoma C[], int d) {
+  /*Function that determines the cromosomes who have to be crossed and the other ones who have to be removed
+   It returns the number of remaining cromosomes in the poblation*/
+  private int recombinar (Cromosoma C[], int d) {
 
-
+    int i, j;
     int distHamming;
-    int child = 0;
-    //creating the new vector of cromosomes
-    Cromosoma [] Pob_child=new Cromosoma[C.length];
-    for (int i =0; i<C.length; i++)
-        Pob_child[i]=new Cromosoma(datosTrain.length, generator);
-    
-    for (int attempt=0; attempt< C.length*4 && child < C.length;attempt++){
-        distHamming=0;
-        /* creating the index with quadratc distribution (the bests cromosomes will 
-         * be probably chosen to recombination.
-         */
-        double father=Math.pow(generator.getDouble(), 2);
-        int indexFather=(int)Math.round(father*(C.length-1));
-        double mother=Math.pow(generator.getDouble(), 2);
-        int indexMother=(int)Math.round(mother*(C.length-1));
-        //check if the distHamming is bigger than threshold d
-        for (int j=0; j<datosTrain.length; j++){
-            if (C[indexFather].getGen(j) != C[indexMother].getGen(j))
-                distHamming++;
+    int tamC = 0;
+
+    for (i=0; i<C.length/2; i++) {
+      distHamming = 0;
+      for (j=0; j<datosTrain.length; j++)
+        if (C[i*2].getGen(j) != C[i*2+1].getGen(j))
+          distHamming++;
+      if ((distHamming/2) > d) {
+        for (j=0; j<datosTrain.length; j++) {
+          if ((C[i*2].getGen(j) != C[i*2+1].getGen(j)) && Randomize.Rand() < 0.5) {
+              if (C[i*2].getGen(j))
+                  C[i*2].setGen(j,false);
+              else
+                  C[i*2].setGen(j,false);
+          }
         }
-        if ((distHamming/2) > d) {
-            for (int j=0; j<datosTrain.length; j++) {
-                if ((C[indexFather].getGen(j) != C[indexMother].getGen(j)) && generator.getDouble() < 0.5) 
-                    Pob_child[child].setGen(j, C[indexFather].getGen(j));
-                else
-                    Pob_child[child].setGen(j, C[indexMother].getGen(j));
-            }
-            // we have already created a new child
-            child++;
-        }        
+        tamC += 2;
+      } else {
+        C[i*2].borrar();
+        C[i*2+1].borrar();
+      }
     }
-    
-    /* If the algorithm end without C.lenght childs we'll add the old best 
-     * cromosomes to the new poblation.
-     */
-    childNum = child;
-    
-    boolean [] vectZeros=new boolean[datosTrain.length];
-    for (int i=0;i< datosTrain.length;i++)
-        vectZeros[i]=false;       
-    
-    if (child<C.length){      
-        for (int i=0; child<C.length; i++){
-            Pob_child[child]=new Cromosoma(vectZeros,generator);
-            Pob_child[child].calidad=0;
-            Pob_child[child].correctClassPerc=0;
-            Pob_child[child].evaluated=true;
-            child++;
-        }
-    }
-    return Pob_child;
-    
+
+    return tamC;
   }
 
   public void leerConfiguracion (String ficheroScript) {
@@ -394,14 +347,10 @@ public class CHC45_Verbose extends Metodo {
     i++;
     for (j=i; line[j]!='\"'; j++);
     ficheroTraining = new String (line,i,j-i);
-    System.out.println("il file di training Ë:");
-    System.out.println(ficheroTraining);
     for (i=j+1; line[i]!='\"'; i++);
     i++;
     for (j=i; line[j]!='\"'; j++);
     ficheroTest = new String (line,i,j-i);
-    System.out.println("il file di test Ë:");
-    System.out.println(ficheroTest);
 
     /*Obtainin the path and the base name of the results files*/
     linea = lineasFichero.nextToken();

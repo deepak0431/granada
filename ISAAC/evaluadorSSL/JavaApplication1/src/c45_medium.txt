@@ -23,10 +23,13 @@ Ignore-MV.IS-ENN.C45-C
 Ignore-MV.IS-ENNTh.C45-C
 Ignore-MV.IS-ENRBF.C45-C
 Ignore-MV.IS-Explore.C45-C
+Ignore-MV.IS-IGA.C45-C
 Ignore-MV.IS-MCS.C45-C
 Ignore-MV.IS-MNV.C45-C
 Ignore-MV.IS-Multiedit.C45-C
 Ignore-MV.IS-NCNEdit.C45-C
+Ignore-MV.IS-PSRCG.C45-C
+Ignore-MV.IS-SNN.C45-C
 Ignore-MV.IS-TCNN.C45-C
 Ignore-MV.IS-VSM.C45-C
 

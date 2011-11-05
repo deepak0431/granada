@@ -1054,6 +1054,16 @@
 		</jar>
                 
                 <jar
+			  jarfile="${distPre}/IS-CHC_I_P.jar"
+			  manifest="${src}/keel/Algorithms/Preprocess/Instance_Selection/CHC_I_P/Manifest">
+			  <fileset dir="${bin}"
+				 includes="keel/Algorithms/Preprocess/Instance_Selection/CHC_I_P/**/*.class"/>
+			  <fileset dir="${bin}" includes="keel/Algorithms/Preprocess/Basic/**/*.class
+			  org/core/**/*.class
+			  keel/Dataset/**/*.class"/>
+		</jar>
+                
+                <jar
 			  jarfile="${distPre}/IS-CHC45_Verbose.jar"
 			  manifest="${src}/keel/Algorithms/Preprocess/Instance_Selection/CHC45_Verbose/Manifest">
 			  <fileset dir="${bin}"
