@@ -23,6 +23,7 @@ public class TestC45_small {
     static boolean algorithms = true;
     static Vector <String> algoritmos;
     static Vector <String> sel_alg;
+    static Vector <String> sel_alg_largo;
     static Vector <String> datasets;
 
     static Vector <Integer> saltos;
@@ -152,6 +153,7 @@ public class TestC45_small {
             algoritmos = new Vector <String>();
             datasets = new Vector <String>();
             sel_alg = new Vector <String>();
+            sel_alg_largo = new Vector <String>();
 
             saltos = new Vector <Integer>();
 
@@ -212,20 +214,55 @@ public class TestC45_small {
             generate_DBvector();
         }
         
+        
         private static void nomi_selAlg(){
             String alg_name="";
+            
+            String[] vect_str;
         
             for (int i=0; i<algoritmos.size(); i++) {
                 
                 alAct = (String)algoritmos.elementAt(i);
                 StringTokenizer st = new StringTokenizer(alAct,".");
                 System.out.println(alAct);
+                
+                if (st.countTokens()==3){
+
+                    st.nextToken();
+                    alg_name= st.nextToken();
+                    if (alg_name.startsWith("IS")){
+                        st = new StringTokenizer(alg_name,"-");
+                        st.nextToken();
+                        alg_name=st.nextToken();
+                    }   
+                    else {
+                        vect_str = alg_name.split("-TSS");
+                        alg_name = vect_str[0];
+                        }
+                    /* This algorithm is called "CPruner" but does the time's print
+                     * writing "Cpruner"
+                     */
+                    if (alg_name.compareTo("CPruner")==0)
+                        alg_name="Cpruner";
+                    sel_alg.addElement(new String(alg_name));                    
+                }else{
+                    sel_alg.addElement(new String("C45"));
+                }
+            }
+        
+            for (int i=0; i<algoritmos.size(); i++) {
+                
+                alAct = (String)algoritmos.elementAt(i);
+                StringTokenizer st = new StringTokenizer(alAct,".");
+                
                 alg_name = st.nextToken();
                 if (alg_name.compareTo("Ignore-MV")==0)
                     alg_name=st.nextToken();
-                sel_alg.addElement(alg_name);
+                sel_alg_largo.addElement(alg_name);
             }
+            
         }
+
         
         public static void generate_DBvector(){
             
@@ -336,7 +373,7 @@ public class TestC45_small {
                                     String nomeFile="Ignore-MV";
                                     
                                     if (i!=0){
-                                        nomeFile+="."+sel_alg.elementAt(i);
+                                        nomeFile+="."+sel_alg_largo.elementAt(i);
                                          
                                     }        
                                     //nomeFile+="."+datasets.get(j);                                 

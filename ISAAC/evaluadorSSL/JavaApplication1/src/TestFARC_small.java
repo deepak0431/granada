@@ -69,6 +69,8 @@ public class TestFARC_small {
     static double RedSize[][];
     static double RedSizeXtst[][];
     static double RedXtst[][];
+    // usefull for the Pareto graphic
+    static double avg_numeroNodi[];
 
     
     // Element AVG variables
@@ -113,6 +115,8 @@ public class TestFARC_small {
                 //WRITING THE TABLES
                 System.out.println("writeTableAvg" );
                 writeTableAvg();
+                System.out.println("writeTablePareto" );
+                writePareto();
                 System.out.println("writeAvgRank" );
                 writeTableAvg_rank();
                 System.out.println("write_table_excel" );
@@ -978,7 +982,7 @@ public class TestFARC_small {
             // Creating AVG vectors;
             double avg_accuracyTst[]= new double[algoritmos.size()];
             double avg_accuracyTra[]= new double[algoritmos.size()];
-            double avg_numeroNodi[] = new double[algoritmos.size()];
+            avg_numeroNodi = new double[algoritmos.size()];
             double avg_antRule[]    = new double[algoritmos.size()];
             double avg_RedSize[]    = new double[algoritmos.size()];
             double avg_IS_Red[]     = new double[algoritmos.size()];
@@ -1131,6 +1135,35 @@ public class TestFARC_small {
                 tabla.addStringBordL(16,1+j, sel_alg.elementAt(elem_Time[j].getIndex()));
                 //tabla.addNumber(15,1+j, elem_RedSizeXtst[j].getValue());
                 tabla.addNumber(17,1+j, b.doubleValue());
+            }
+            tabla.write();
+        }
+        
+        private static void writePareto()throws IOException, WriteException{
+            
+            MyExcelWriter tabla = new MyExcelWriter();
+            tabla.setOutputFile("SMALL\\Tablas\\FARC\\Pareto\\ExcelFARC_Pareto_small.xls");
+            tabla.create("tablaC45");
+
+            tabla.addStringBig(0, 0, "Accuracy_tst");
+            tabla.addStringBig(2, 0, "# Nodes");
+
+            
+            for(int j=0;j<sel_alg.size();j++){
+                BigDecimal b; int precisionBig=3;int precision=2;
+
+                // size
+                b=new BigDecimal(avg_numeroNodi[elem_AvgTst[j].getIndex()]).setScale(precision,BigDecimal.ROUND_HALF_UP);
+                tabla.addStringBordL(0,1+j, sel_alg.elementAt(elem_AvgTst[j].getIndex()));
+                //tabla.addNumber(5,1+j, elem_AvgnumeroNodi[j].getValue());
+                tabla.addNumber(1,1+j, b.doubleValue());
+
+                // Accuracy test
+                b=new BigDecimal(elem_AvgTst[j].getValue()).setScale(precisionBig,BigDecimal.ROUND_HALF_UP);
+                tabla.addStringBordL(2,1+j, sel_alg.elementAt(elem_AvgTst[j].getIndex()));
+                //tabla.addNumber(3,1+j, elem_AvgTst[j].getValue());
+                tabla.addNumber(3,1+j, b.doubleValue());
+            
             }
             tabla.write();
         }

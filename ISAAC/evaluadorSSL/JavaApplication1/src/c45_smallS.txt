@@ -1,8 +1,11 @@
 Ignore-MV.C45-C
+Ignore-MV.CHC_I_P-TSS.C45-C
+Ignore-MV.CHC45_Verbose-TSS.C45-C
 Ignore-MV.IS-AllKNN.C45-C
 Ignore-MV.IS-HMNEI.C45-C
 Ignore-MV.IS-MENN.C45-C
 Ignore-MV.IS-ModelCS.C45-C
+Ignore-MV.IS-MSS.C45-C
 Ignore-MV.IS-POP.C45-C
 Ignore-MV.IS-RNG.C45-C
 Ignore-MV.IS-ENN.C45-C
