@@ -23,6 +23,7 @@ public class TestC45_medium {
     static boolean algorithms = true;
     static Vector <String> algoritmos;
     static Vector <String> sel_alg;
+    static Vector <String> sel_alg_largo;
     static Vector <String> datasets;
 
     static Vector <Integer> saltos;
@@ -67,6 +68,8 @@ public class TestC45_medium {
     static double RedSize[][];
     static double RedSizeXtst[][];
     static double RedXtst[][];
+    // usefull for the Pareto graphic
+    static double avg_numeroNodi[];
 
     
     // Element AVG variables
@@ -107,6 +110,7 @@ public class TestC45_medium {
                 
                 //WRITING THE TABLES
                 writeTableAvg();
+                writePareto();
                 writeTableAvg_rank();
                 write_table_excel();
                 writeTable_Bests();
@@ -119,12 +123,20 @@ public class TestC45_medium {
                 //print_redSize();
         }
         private static void calculate_values(){
+            System.out.println("calcolo acc_tst");
             calcolo_accurancy();
+            System.out.println("calcolo acc_tra");
             calcolo_accurancy_tra();
 
+            System.out.println("calcolo red");
             calcolo_Red();
+            
+            System.out.println("calcolo nodi_ant");
             calcolo_nodi_ant();
+            
+            System.out.println("calcolo friedman");
             calculate_friedman();
+            System.out.println("calcolo RedAVG");
             calculate_redAVG();
         }
         
@@ -141,6 +153,7 @@ public class TestC45_medium {
             algoritmos = new Vector <String>();
             datasets = new Vector <String>();
             sel_alg = new Vector <String>();
+            sel_alg_largo = new Vector <String>();
 
             saltos = new Vector <Integer>();
 
@@ -201,20 +214,55 @@ public class TestC45_medium {
             generate_DBvector();
         }
         
+        
         private static void nomi_selAlg(){
             String alg_name="";
+        
+            String[] vect_str;
         
             for (int i=0; i<algoritmos.size(); i++) {
                 
                 alAct = (String)algoritmos.elementAt(i);
                 StringTokenizer st = new StringTokenizer(alAct,".");
                 System.out.println(alAct);
+                
+                if (st.countTokens()==3){
+
+                    st.nextToken();
+                    alg_name= st.nextToken();
+                    if (alg_name.startsWith("IS")){
+                        st = new StringTokenizer(alg_name,"-");
+                        st.nextToken();
+                        alg_name=st.nextToken();
+                    }   
+                    else {
+                        vect_str = alg_name.split("-TSS");
+                        alg_name = vect_str[0];
+                        }
+                    /* This algorithm is called "CPruner" but does the time's print
+                     * writing "Cpruner"
+                     */
+                    if (alg_name.compareTo("CPruner")==0)
+                        alg_name="Cpruner";
+                    sel_alg.addElement(new String(alg_name));                    
+                }else{
+                    sel_alg.addElement(new String("C45"));
+                }
+            }
+        
+            for (int i=0; i<algoritmos.size(); i++) {
+                
+                alAct = (String)algoritmos.elementAt(i);
+                StringTokenizer st = new StringTokenizer(alAct,".");
+                
                 alg_name = st.nextToken();
                 if (alg_name.compareTo("Ignore-MV")==0)
                     alg_name=st.nextToken();
-                sel_alg.addElement(alg_name);
+                sel_alg_largo.addElement(alg_name);
             }
+            
         }
+        
         
         public static void generate_DBvector(){
             
@@ -244,7 +292,7 @@ public class TestC45_medium {
             /* Istruzioni eseguite per ognuno degli algoritmi */
             for (int i=0; i<algoritmos.size(); i++) {
                     alAct = (String)algoritmos.elementAt(i);
-                    System.out.println("Processing algorithm: " + alAct);
+                    //System.out.println("Processing algorithm: " + alAct);
             
                     /* Per ognuno dei datasets presenti (indipendentemente dal numero di elementi del dataset)*/
                     for (int j=0; j<datasets.size(); j++) {
@@ -253,7 +301,9 @@ public class TestC45_medium {
                             acc = red = kappa = 0.0;
                             aciertos = 0;
                             total = 0;
+                            //System.out.println("Processing dataset: " + datAct);
                             for (int k=0; k<10; k++) {
+                                    //System.out.println("Processing index: " + k);
                                     /*Accuracy Computation*/
 
 
@@ -263,7 +313,10 @@ public class TestC45_medium {
                                     if(cadena.equals("-1")){
                                             cadena = Fichero.myleeFichero("MEDIUM\\resultsC45\\"+alAct+"."+datasets.get(j)+"\\result"+Integer.toString(k+10)+".tst");
                                     }
-
+                                    if(cadena.equals("-1")){
+                                        System.out.println("File non trovato :"+ "MEDIUM\\resultsC45\\"
+                                            +alAct+"."+datasets.get(j)+"\\result"+Integer.toString(k)+".tst");
+                                    }
 
                                     //System.out.println(datasets.get(j));
                                     //System.out.println(cadena);
@@ -320,7 +373,7 @@ public class TestC45_medium {
                                     String nomeFile="Ignore-MV";
                                     
                                     if (i!=0){
-                                        nomeFile+="."+sel_alg.elementAt(i);
+                                        nomeFile+="."+sel_alg_largo.elementAt(i);
                                          
                                     }        
                                     //nomeFile+="."+datasets.get(j);                                 
@@ -846,7 +899,7 @@ public class TestC45_medium {
             // Creating AVG vectors;
             double avg_accuracyTst[]= new double[algoritmos.size()];
             double avg_accuracyTra[]= new double[algoritmos.size()];
-            double avg_numeroNodi[] = new double[algoritmos.size()];
+            avg_numeroNodi          = new double[algoritmos.size()];
             double avg_antRule[]    = new double[algoritmos.size()];
             double avg_RedSize[]    = new double[algoritmos.size()];
             double avg_IS_Red[]     = new double[algoritmos.size()];
@@ -983,8 +1036,36 @@ public class TestC45_medium {
                 b=new BigDecimal(elem_RedSizeXtst[j].getValue()).setScale(precision,BigDecimal.ROUND_HALF_UP);
                 tabla.addStringBordL(14,1+j, sel_alg.elementAt(elem_RedSizeXtst[j].getIndex()));
                 //tabla.addNumber(15,1+j, elem_RedSizeXtst[j].getValue());
-                tabla.addNumber(15,1+j, b.doubleValue());
+                tabla.addNumber(15,1+j, b.doubleValue());               
+            }
+            tabla.write();
+        }
+        
+        private static void writePareto()throws IOException, WriteException{
+        
+            MyExcelWriter tabla = new MyExcelWriter();
+            tabla.setOutputFile("MEDIUM\\Tablas\\C45\\Pareto\\ExcelC45_Pareto_medium.xls");
+            tabla.create("tablaC45");
+
+            tabla.addStringBig(0, 0, "Accuracy_tst");
+            tabla.addStringBig(2, 0, "# Nodes");
+
+            
+            for(int j=0;j<sel_alg.size();j++){
+                BigDecimal b; int precisionBig=6;int precision=4;
                 
+                // Accuracy test
+                b=new BigDecimal(elem_AvgTst[j].getValue()).setScale(precisionBig,BigDecimal.ROUND_HALF_UP);
+                tabla.addStringBordL(0,1+j, sel_alg.elementAt(elem_AvgTst[j].getIndex()));
+                //tabla.addNumber(3,1+j, elem_AvgTst[j].getValue());
+                tabla.addNumber(1,1+j, b.doubleValue());
+                
+                // size
+                b=new BigDecimal(avg_numeroNodi[elem_AvgTst[j].getIndex()]).setScale(precision,BigDecimal.ROUND_HALF_UP);
+                tabla.addStringBordL(2,1+j, sel_alg.elementAt(elem_AvgTst[j].getIndex()));
+                //tabla.addNumber(5,1+j, elem_AvgnumeroNodi[j].getValue());
+                tabla.addNumber(3,1+j, b.doubleValue());
+            
             }
             tabla.write();
         }

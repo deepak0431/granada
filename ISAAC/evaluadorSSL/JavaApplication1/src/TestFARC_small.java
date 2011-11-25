@@ -1072,7 +1072,7 @@ public class TestFARC_small {
             
             tabla.addStringBig(0, 0, "Accuracy_tra");
             tabla.addStringBig(2, 0, "Accuracy_tst");
-            tabla.addStringBig(4, 0, "# Nodes");
+            tabla.addStringBig(4, 0, "# Rules");
             tabla.addStringBig(6, 0, "# Antecedents");
             tabla.addStringBig(8, 0, "IS_Reduction");
             tabla.addStringBig(10, 0, "RedSize");
@@ -1146,11 +1146,11 @@ public class TestFARC_small {
             tabla.create("tablaC45");
 
             tabla.addStringBig(0, 0, "Accuracy_tst");
-            tabla.addStringBig(2, 0, "# Nodes");
+            tabla.addStringBig(2, 0, "# Rules");
 
             
             for(int j=0;j<sel_alg.size();j++){
-                BigDecimal b; int precisionBig=3;int precision=2;
+                BigDecimal b; int precisionBig=6;int precision=4;
 
                 // size
                 b=new BigDecimal(avg_numeroNodi[elem_AvgTst[j].getIndex()]).setScale(precision,BigDecimal.ROUND_HALF_UP);

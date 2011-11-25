@@ -689,13 +689,13 @@ public class TestC45_small {
                tabla.addNumberBordR(5, 1+i, datasets_info[i].IS_div_attr);
                
                /* We are writing the values of the algorithms that perform better 
-                * equal to the FARC Algorithm (without the Instance selection)
+                * equal to the C45 Algorithm (without the Instance selection)
                 */
                ElementIndex elem_dataset_rank[]=ArrayIndex.createArray(ranks_matr[i]);
                Arrays.sort(elem_dataset_rank);
         
                /* Still there's an algorithm with a rank equal or bigger then the 
-                * FARC's algorithm continues the loop.
+                * C45's algorithm continues the loop.
                 */
                for(int j=0;elem_dataset_rank[j].getValue()<=ranks_matr[i][0];j++){
                    BigDecimal b; 
@@ -1052,7 +1052,7 @@ public class TestC45_small {
 
             
             for(int j=0;j<sel_alg.size();j++){
-                BigDecimal b; int precisionBig=3;int precision=2;
+                BigDecimal b; int precisionBig=6;int precision=4;
                 
                 // Accuracy test
                 b=new BigDecimal(elem_AvgTst[j].getValue()).setScale(precisionBig,BigDecimal.ROUND_HALF_UP);

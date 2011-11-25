@@ -1,19 +1,11 @@
 Ignore-MV.C45-C
-Ignore-MV.CHC-TSS.C45-C
-Ignore-MV.CHClassic-TSS.C45-C
-Ignore-MV.IS-SSMA.C45-C
 Ignore-MV.GGA-TSS.C45-C
 Ignore-MV.PBIL-TSS.C45-C
-Ignore-MV.SGA-TSS.C45-C
 Ignore-MV.IS-AllKNN.C45-C
 Ignore-MV.IS-CNN.C45-C
-Ignore-MV.IS-CPruner.C45-C
-Ignore-MV.IS-DROP3.C45-C
 Ignore-MV.IS-FCNN.C45-C
 Ignore-MV.IS-HMNEI.C45-C
 Ignore-MV.IS-IB3.C45-C
-Ignore-MV.IS-ICF.C45-C
-Ignore-MV.IS-MCNN.C45-C
 Ignore-MV.IS-MENN.C45-C
 Ignore-MV.IS-ModelCS.C45-C
 Ignore-MV.IS-MSS.C45-C
@@ -21,20 +13,14 @@ Ignore-MV.IS-POP.C45-C
 Ignore-MV.IS-Reconsistent.C45-C
 Ignore-MV.IS-RMHC.C45-C
 Ignore-MV.IS-RNG.C45-C
-Ignore-MV.IS-RNN.C45-C
 Ignore-MV.IS-ENN.C45-C
 Ignore-MV.IS-ENNTh.C45-C
-Ignore-MV.IS-ENRBF.C45-C
-Ignore-MV.IS-Explore.C45-C
 Ignore-MV.IS-IGA.C45-C
 Ignore-MV.IS-MCS.C45-C
 Ignore-MV.IS-MNV.C45-C
 Ignore-MV.IS-Multiedit.C45-C
 Ignore-MV.IS-NCNEdit.C45-C
-Ignore-MV.IS-PSRCG.C45-C
-Ignore-MV.IS-SNN.C45-C
 Ignore-MV.IS-TCNN.C45-C
-Ignore-MV.IS-VSM.C45-C
 
 ----
 
@@ -43,6 +29,6 @@ page-blocks-10fold 0
 penbased-10fold 0
 ring-10fold 0
 thyroid-10fold 0
-satimage-10fold 0
 nursery-10fold 0
+satimage-10fold 0
 coil2000-10fold 0
