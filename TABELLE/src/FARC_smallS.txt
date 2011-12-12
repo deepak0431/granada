@@ -1,6 +1,4 @@
 Ignore-MV.FARC-HD
-Ignore-MV.CHC_I_P-TSS.FARC-HD
-Ignore-MV.CHC45_Verbose-TSS.FARC-HD
 Ignore-MV.IS-AllKNN.FARC-HD
 Ignore-MV.IS-HMNEI.FARC-HD
 Ignore-MV.IS-MENN.FARC-HD
@@ -12,6 +10,7 @@ Ignore-MV.IS-ENN.FARC-HD
 Ignore-MV.IS-ENNTh.FARC-HD
 Ignore-MV.IS-Multiedit.FARC-HD
 Ignore-MV.IS-NCNEdit.FARC-HD
+Ignore-MV.IS-TCNN.FARC-HD
 
 ----
 
