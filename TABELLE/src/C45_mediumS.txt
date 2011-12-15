@@ -1,6 +1,7 @@
 Ignore-MV.C45-C
 Ignore-MV.GGA-TSS.C45-C
 Ignore-MV.PBIL-TSS.C45-C
+Ignore-MV.SGA-TSS.C45-C
 Ignore-MV.IS-AllKNN.C45-C
 Ignore-MV.IS-CNN.C45-C
 Ignore-MV.IS-FCNN.C45-C
